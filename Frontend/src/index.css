@@ -1,0 +1,79 @@
+:root {
+  --page-padding: 1.5rem;
+  --background-gradiant: linear-gradient(to right, #dcecfb, #e5e6f8);
+  --white: #ffffff;
+  --border-color: #e1e1e1;
+  --tertiary-font-color: #777777;
+  --secondary-font-color: #4f4f4f;
+  --primary-font-color: #0b0b0b;
+  --primary-button: linear-gradient(to right, #fae2eb, #fedafd);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+label,
+button {
+  font-family: "Poppins", sans-serif;
+}
+
+html {
+  font-size: 14px;
+  height: 100dvh;
+  width: 100%;
+  overflow: hidden;
+  background: var(--background-gradiant);
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.glassEffect {
+  background: #ffffffbf;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+label {
+  color: var(--secondary-font-color);
+  font-size: 12px;
+}
+
+input::placeholder {
+  color: var(--tertiary-font-color);
+  font-style: italic;
+  font-family: "Poppins", sans-serif;
+  font-size: 12px;
+}
+
+.formSection {
+  display: flex;
+  flex-direction: row;
+}
+
+.formBox {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.formContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 60%;
+}

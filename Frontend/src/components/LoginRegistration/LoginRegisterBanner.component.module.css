@@ -1,0 +1,32 @@
+
+.box{
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .box {
+    padding: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    gap: 1.5rem;
+    background-image: url("/FormBannerImage.png");
+    background-size: cover; 
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+    width: 40%;
+  
+    margin: 0;
+  }
+
+  h1{
+    color: white;
+  }
+
+  img{
+    height: 3rem ;
+    width: 12rem
+  }
+}
+
