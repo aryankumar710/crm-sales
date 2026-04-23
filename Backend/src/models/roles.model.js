@@ -8,6 +8,12 @@ const RoleSchema = mongoose.Schema(
       required: true,
     },
 
+    roleType: {
+      type: String,
+      trim: true,
+      required: true,
+    },
+
     parentRole: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Role",

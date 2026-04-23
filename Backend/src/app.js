@@ -21,14 +21,12 @@ app.use((req, res, next) => {
   next();
 });
 
-import { organisationRouter } from "./routes/organisation.route.js";
-
-import { employeeRouter } from "./routes/employee.route.js";
-
-app.use("/api/v1", organisationRouter)
 
 
-app.use("/api/v1", employeeRouter)
+import { authRouter } from "./routes/auth.route.js";
+
+app.use("/api/v1", authRouter)
+
 
 app.use((err, req, res, next) => {
   if (err instanceof APIError) {
