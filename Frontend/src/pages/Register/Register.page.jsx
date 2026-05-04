@@ -1,18 +1,20 @@
-import { LoginRegisterBanner } from "../../components/LoginRegistration/LoginRegisterBanner.component";
+import { LoginRegisterBanner } from "../../components/LoginRegistration/LoginRegisterBanner.component.jsx";
 import styles from "./Register.page.module.css";
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setEmployee } from "../../features/auth/authSlice.js";
 import { PlainInputField } from "../../components/inputFields/PlainInputfield.jsx";
 import { PhoneInputField } from "../../components/InputFields/PhoneInputField.jsx";
 import { PasswordInputField } from "../../components/InputFields/PasswordInputField.jsx";
 import { FileInputField } from "../../components/InputFields/FileInputField.jsx";
-import { PrimaryButton } from "../../components/Buttons/PrimaryButton.jsx";
-import { useRegisterMutation } from "../../features/auth/authAPI.js";
+import { PrimaryButton } from "../../components/Buttons/PrimaryButton.component.jsx";
+import { useGetMeQuery, useRegisterMutation } from "../../features/auth/authAPI.js";
 
 export const Registration = () => {
   const [register, {data, isLoading, error, isSuccess}] = useRegisterMutation()
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   // const { loading, error, success } = useSelector((state) => state.auth);
 
   const [form, setForm] = useState({
@@ -26,6 +28,7 @@ export const Registration = () => {
     phoneNumber: "",
     password: "",
   });
+
 
   function handleChange(e) {
     setForm({
@@ -48,7 +51,7 @@ export const Registration = () => {
     const data = new FormData();
 
     data.append("companyName", form.companyName);
-    data.append("logo", form.companyLogo); // ⚠️ must match multer field
+    data.append("logo", form.companyLogo); // 
     data.append("headOfficeName", form.headOfficeName);
     data.append("superAdminEmail", form.superAdminEmail);
     data.append("adminName", form.adminName);
@@ -62,19 +65,18 @@ export const Registration = () => {
     try{
       const res = await register(data).unwrap()
       console.log(res)
-      dispatch(setEmployee(res))
+      dispatch(setEmployee(res.data))
+      console.log("DISPATCH DONE");
+      console.log(res.data)
+      navigate("/adminDashboard")
     }catch(e){
       console.log(e)
     }
   }
 
-  // if (loading) {
-  //   <button className={styles.submitBtn} disabled={true}></button>;
-  // }
-
   return (
     <>
-      <section className="formSection">
+      < div className="formSection">
         <LoginRegisterBanner />
         <div className="formContainer">
           <form method="post" className="glassEffect" onSubmit={handleSubmit}>
@@ -177,7 +179,7 @@ export const Registration = () => {
             </PrimaryButton>
           </form>
         </div>
-      </section>
+      </div>
     </>
   );
 };

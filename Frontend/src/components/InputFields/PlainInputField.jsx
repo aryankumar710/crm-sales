@@ -1,4 +1,4 @@
-import styles from "../InputFields/InputField.module.css"
+import styles from "../InputFields/InputField.component.module.css";
 
 export const PlainInputField = ({ type,placeholder, value, name , onChange, required, label}) => {
   return (

@@ -22,9 +22,12 @@ export const verifyJWT = async (req, res, next) => {
       throw new APIError(401, "Invalid Access Token");
     }
 
-    req.employee = employee;
+    req.context = {
+      employeeID: employee._id,
+      organisationID: employee.organisationID
+    } 
     next();
   } catch (error) {
-    throw new APIError(500, "Invalid Access Token");
+    throw new APIError(401, "Invalid Access Token");
   }
 };

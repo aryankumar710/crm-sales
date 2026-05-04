@@ -1,4 +1,4 @@
-import styles from "../InputFields/InputField.module.css";
+import styles from "../InputFields/InputField.component.module.css";
 
 export const FileInputField = ({type, name, label, accept, onChange, required}) => {
   return (

@@ -1,0 +1,13 @@
+.layout {
+  padding: 1.5rem;
+  gap: 2.5rem;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  position: relative;
+}
+
+.flex{
+    flex: 1;
+    margin-left: 5rem;
+}

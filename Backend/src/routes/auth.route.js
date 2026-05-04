@@ -8,6 +8,7 @@ import {
   loginEmployee,
   refreshAccessToken,
   logout,
+  getMe,
 } from "../controllers/auth.controller.js";
 import { inviteTokenValidate } from "../middlewares/inviteTokenValidate.js";
 
@@ -28,5 +29,7 @@ authRouter.route("/login").post(loginEmployee);
 authRouter.route("/refresh-token").post(refreshAccessToken);
 
 authRouter.route("/logout").post(verifyJWT, logout);
+
+authRouter.route("/getMe").get(verifyJWT, getMe)
 
 export { authRouter };

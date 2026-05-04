@@ -1,3 +1,4 @@
+
 :root {
   --page-padding: 1.5rem;
   --background-gradiant: linear-gradient(to right, #dcecfb, #e5e6f8);
@@ -7,14 +8,20 @@
   --secondary-font-color: #4f4f4f;
   --primary-font-color: #0b0b0b;
   --primary-button: linear-gradient(to right, #fae2eb, #fedafd);
+  --background-negative: #FFCBCC;
+  --negative: #630F11;
+    --background-positive: #D9F0E4;
+  --positive: #630F11;
+  --surface: #f5f5f5;
 }
 
 * {
   box-sizing: border-box;
   margin: 0;
-  padding: 0;
+ 
   -webkit-font-smoothing: antialiased;
 }
+
 h1,
 h2,
 h3,
@@ -23,7 +30,7 @@ h5,
 h6,
 p,
 label,
-button {
+button,td,th {
   font-family: "Poppins", sans-serif;
 }
 
@@ -31,7 +38,7 @@ html {
   font-size: 14px;
   height: 100dvh;
   width: 100%;
-  overflow: hidden;
+  overflow-x: hidden;
   background: var(--background-gradiant);
 }
 
@@ -42,9 +49,31 @@ html {
 }
 
 .glassEffect {
-  background: #ffffffbf;
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.3);;
+  -webkit-backdrop-filter: blur(10%);
+  backdrop-filter: blur(10%);
+}
+
+.background{
+  background: var(--white);
+}
+
+
+
+section {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  padding: 1.75rem;
+  border-radius: 2.75rem;
+  gap: 2.5rem;
+}
+
+.subSection {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  border-radius: 1rem;
 }
 
 label {
@@ -57,6 +86,21 @@ input::placeholder {
   font-style: italic;
   font-family: "Poppins", sans-serif;
   font-size: 12px;
+}
+
+form {
+  width: 50%;
+  gap: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  border-radius: 2.75rem;
+  padding: 1.75rem;
+}
+
+form h1 {
+  color: var(--primary-font-color);
+  font-size: 1.75rem;
+  font-weight: 500;
 }
 
 .formSection {

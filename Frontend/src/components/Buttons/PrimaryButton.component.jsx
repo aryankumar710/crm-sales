@@ -1,4 +1,4 @@
-import styles from "../Buttons/Button.module.css";
+import styles from "../Buttons/Button.component.module.css";
 
 export const PrimaryButton = ({ type, text ,children }) => {
   return (

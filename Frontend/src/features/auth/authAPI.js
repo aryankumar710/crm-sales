@@ -22,10 +22,18 @@ export const authApi = createApi({
       }),
     }),
 
-    getme: builder.query({
-      query: () => "/me",
+    getMe: builder.query({
+      query: () => "/getMe",
     }),
+
+    login: builder.mutation({
+      query: (data)=> ({
+        url: "/login",
+        method: "POST",
+        body: data
+      })
+    })
   }),
 });
 
-export const {useRegisterMutation} = authApi;
+export const {useRegisterMutation, useGetMeQuery, useLoginMutation} = authApi;

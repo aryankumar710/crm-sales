@@ -1,0 +1,73 @@
+.dashboardData {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 1.25rem;
+}
+
+.employeeDashboard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.employeeDashboard h1 {
+  color: var(--primary-font-color);
+  font-size: 1.75rem;
+  font-weight: 500;
+}
+
+.slider {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.875rem 1.5rem;
+}
+
+.employeeStatusAlignment {
+  display: flex;
+  gap: 1rem;
+}
+
+.employeeStatus {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.employeeStatus h6 {
+  font-size: 0.625rem;
+  font-weight: 400;
+  color: var(--primary-font-color);
+}
+
+.greenBox {
+  background-color: var(--background-positive);
+  height: 0.5rem;
+  width: 0.5rem;
+}
+
+.redBox {
+  background-color: var(--background-negative);
+  height: 0.5rem;
+  width: 0.5rem;
+}
+
+table {
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+}
+
+td,
+th {
+  text-align: left;
+  padding: 1.5rem;
+  padding-left: 3rem;
+  margin: 0;
+}
+
+.tableTabs {
+  background-color: var(--surface);
+  padding: 0.875rem 1.5rem;
+}
+
+

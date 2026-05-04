@@ -195,22 +195,30 @@ const register = async (req, res) => {
       "-password -refreshToken"
     );
 
-    const options = {
+    const loggedInOrganisation = await Organisation.findById(
+      createOrganisation[0]._id
+    );
+
+    const option = {
       httpOnly: true,
-      secure: true,
-      sameSite: "Strict",
+      secure: false,
+      sameSite: "Lax",
     };
 
     res
       .status(201)
-      .cookie("AccessToken", accessToken, options)
-      .cookie("RefreshToken", refreshToken, options)
+      .cookie("accessToken", accessToken, option)
+      .cookie("aefreshToken", refreshToken, option)
       .json(
-        new APIResponse(201, loggedInEmployee, createsuperAdmin, "User fetched")
+        new APIResponse(
+          201,
+          { loggedInEmployee, loggedInOrganisation },
+          "User fetched"
+        )
       );
   } catch (error) {
     await session.abortTransaction();
-    throw new APIError(500, "Error creating organisation", error.message);
+    throw new APIError(500, "Error creating organisation");
   }
 };
 
@@ -276,7 +284,6 @@ const registerSuperAdmin = async (req, res) => {
 
 const loginEmployee = async (req, res) => {
   try {
-    console.log(req.body);
     const { employeeEmail, password } = req.body;
 
     if (
@@ -287,7 +294,7 @@ const loginEmployee = async (req, res) => {
       throw new APIError(400, "All fields must be filled");
     }
 
-    const employee = await Employee.findOne(employeeEmail);
+    const employee = await Employee.findOne({employeeEmail});
 
     if (!employee) {
       throw new APIError(404, "Employee not found");
@@ -306,19 +313,31 @@ const loginEmployee = async (req, res) => {
       "-password -refreshToken"
     );
 
-    const options = {
-      httpOnly: true,
-      secure: true,
-      sameSite: "Strict",
-    };
+    
 
-    console.log(loggedInEmployee);
+    if (!loggedInEmployee) {
+      throw new APIError(400, "Employee not found");
+    }
+    const loggedInOrganisation = await Organisation.findById(
+      loggedInEmployee?.organisationID
+    );
+    if (!loggedInOrganisation) {
+      throw new APIError(400, "Organisation not found");
+    }
+
+    const option = {
+      httpOnly: true,
+      secure: false,
+      sameSite: "Lax",
+    };
+    
 
     res
       .status(200)
-      .cookie("AccessToken", accessToken, options)
-      .cookie("RefreshToken", refreshToken, options)
-      .json(new APIResponse(200, "Loged In", loggedInEmployee));
+      .cookie("accessToken", accessToken, option)
+      .cookie("refreshToken", refreshToken, option)
+      .json(new APIResponse(200,
+          { loggedInEmployee, loggedInOrganisation }, "Loged In",));
   } catch (error) {
     throw new APIError(500, "Error while login", error.message);
   }
@@ -350,21 +369,21 @@ const refreshAccessToken = async (req, res) => {
 
     const option = {
       httpOnly: true,
-      secure: true,
-      sameSite: "Strict",
+      secure: false,
+      sameSite: "Lax",
     };
 
     const { accessToken, newRefreshToken } =
       await generateAccessTokenAndRefreshToken(employee._id);
 
-    return res
+    res
       .status(200)
       .cookie("accessToken", accessToken, option)
-      .cookie("refreshToken", newRefreshToken, options)
+      .cookie("refreshToken", newRefreshToken, option)
       .json(
         new APIResponse(
           200,
-          { accessToken, refreshToke: newRefreshToken },
+          { accessToken, refreshToken: newRefreshToken },
           "Access Token refreshed successfully"
         )
       );
@@ -376,7 +395,7 @@ const refreshAccessToken = async (req, res) => {
 const logout = async (req, res) => {
   try {
     await Employee.findByIdAndUpdate(
-      req.employee._id,
+      req.context.employeeID,
       {
         $set: {
           refreshToken: undefined,
@@ -387,18 +406,48 @@ const logout = async (req, res) => {
       }
     );
 
-    const options = {
+    const option = {
       httpOnly: true,
-      secure: true,
-      sameSite: "Strict",
+      secure: false,
+      sameSite: "Lax",
     };
 
-    return res
+    res
       .status(200)
-      .clearCookie("accessToken", options)
-      .clearCookie("refreshToken", options)
+      .clearCookie("accessToken", option)
+      .clearCookie("refreshToken", option)
       .json(new APIResponse(200, {}, "User logged Out"));
   } catch (error) {}
+};
+
+const getMe = async (req, res) => {
+  try {
+    const loggedInEmployee = await Employee.findById(
+      req.context.employeeID
+    ).select("-password -refreshToken");
+    const loggedInOrganisation = await Organisation.findById(
+      req.context.organisationID
+    );
+
+    if (!(loggedInEmployee && loggedInOrganisation)) {
+      throw new APIError(400, "Employee or organisation not found");
+    }
+
+    res
+      .status(200)
+      .json(
+        new APIResponse(
+          200,
+          { loggedInEmployee, loggedInOrganisation },
+          "Get Me Data "
+        )
+      );
+  } catch (error) {
+    throw new APIError(
+      500,
+      "Error while getting employee or organisation data from getme"
+    );
+  }
 };
 
 export {
@@ -408,4 +457,5 @@ export {
   loginEmployee,
   refreshAccessToken,
   logout,
+  getMe,
 };
