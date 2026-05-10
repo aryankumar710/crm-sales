@@ -24,6 +24,12 @@ function App() {
       element: <VerticalLayout />,
       children: [{ path: "", element: <AdminDashboard /> }],
     },
+       {
+      path: "/adminDashboard/addEmployee",
+      element: <VerticalLayout />,
+      children: [{ path: "", element: <AdminDashboard /> }],
+    },
+
     {
       path: "/login",
       element:<Login/>,

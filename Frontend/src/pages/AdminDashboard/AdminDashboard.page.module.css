@@ -5,6 +5,16 @@
   gap: 1.25rem;
 }
 
+.whiteBackground{
+  background: var(--white);
+}
+
+.formBox {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
 .employeeDashboard {
   display: flex;
   align-items: center;

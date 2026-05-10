@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { AnalysisCard } from "../../components/AnalysisCard/AnalysisCard.component.jsx";
 import { TertiaryButton } from "../../components/Buttons/TertiaryButton.component.jsx";
 import { Header } from "../../components/Header/Header.component.jsx";
@@ -6,22 +6,39 @@ import { useGetMeQuery } from "../../features/auth/authAPI.js";
 import styles from "../AdminDashboard/AdminDashboard.page.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { setEmployee } from "../../features/auth/authSlice.js";
+import { Modal } from "../../components/Modals/Modal.component.jsx";
+import { useLocation, useNavigate } from "react-router-dom";
+import { PrimaryButton } from "../../components/Buttons/PrimaryButton.component.jsx";
+import { PlainInputField } from "../../components/inputFields/PlainInputfield.jsx";
+import { LoginRegisterBanner } from "../../components/LoginRegistration/LoginRegisterBanner.component.jsx";
+import { PasswordInputField } from "../../components/InputFields/PasswordInputField.jsx";
+import { AddEmployee } from "../EmployeeManagement/AddEmployee.page.jsx";
 
 export const AdminDashboard = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const employee = useSelector((state) => state.auth.employee);
+  console.log(employee);
 
-  const dispatch = useDispatch()
-  const employee = useSelector((state)=> state.auth.employee)
-   console.log(employee)
+  const { data, isLoading } = useGetMeQuery();
 
-  const {data, isLoading} = useGetMeQuery()
-
-
-
-  useEffect(()=> {
-    if(data){
-      dispatch(setEmployee(data?.data))
+  useEffect(() => {
+    if (data) {
+      dispatch(setEmployee(data?.data));
     }
-  },[data])
+  }, [data]);
+
+  const [isOpen, setOpen] = useState(false);
+
+  function handleModal() {
+    if (isOpen) {
+      setOpen(false);
+      navigate("/adminDashboard");
+    } else {
+      setOpen(true);
+      navigate("/adminDashboard/addEmployee");
+    }
+  }
 
   return (
     <>
@@ -29,7 +46,7 @@ export const AdminDashboard = () => {
         <div className="subSection">
           <div className={styles.employeeDashboard}>
             <h1>{employee?.loggedInEmployee?.employeeName}</h1>
-            <TertiaryButton>Add Employee</TertiaryButton>
+            <TertiaryButton onClick={handleModal}>Add Employee</TertiaryButton>
           </div>
 
           <div className={styles.dashboardData}>
@@ -122,6 +139,8 @@ export const AdminDashboard = () => {
           </table>
         </div>
       </section>
+
+      <AddEmployee isOpen={isOpen} />
     </>
   );
 };

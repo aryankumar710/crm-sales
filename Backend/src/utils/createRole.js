@@ -1,4 +1,4 @@
-import { Role } from "../models/roles.model";
+import { Role } from "../models/roles.model.js";
 
 export const createRole = async ({
   roleName,
@@ -12,7 +12,7 @@ export const createRole = async ({
     .limit(1);
   const option = session ? { session } : {};
 
-  const newRole = await Role.createRole(
+  await Role.createRole(
     [
       {
         roleName: roleName,

@@ -280,7 +280,7 @@ const registerSuperAdmin = async (req, res) => {
   }
 };
 
-//Login of employee
+// Login of employee
 
 const loginEmployee = async (req, res) => {
   try {
@@ -294,7 +294,7 @@ const loginEmployee = async (req, res) => {
       throw new APIError(400, "All fields must be filled");
     }
 
-    const employee = await Employee.findOne({employeeEmail});
+    const employee = await Employee.findOne({ employeeEmail });
 
     if (!employee) {
       throw new APIError(404, "Employee not found");
@@ -313,8 +313,6 @@ const loginEmployee = async (req, res) => {
       "-password -refreshToken"
     );
 
-    
-
     if (!loggedInEmployee) {
       throw new APIError(400, "Employee not found");
     }
@@ -330,14 +328,18 @@ const loginEmployee = async (req, res) => {
       secure: false,
       sameSite: "Lax",
     };
-    
 
     res
       .status(200)
       .cookie("accessToken", accessToken, option)
       .cookie("refreshToken", refreshToken, option)
-      .json(new APIResponse(200,
-          { loggedInEmployee, loggedInOrganisation }, "Loged In",));
+      .json(
+        new APIResponse(
+          200,
+          { loggedInEmployee, loggedInOrganisation },
+          "Loged In"
+        )
+      );
   } catch (error) {
     throw new APIError(500, "Error while login", error.message);
   }

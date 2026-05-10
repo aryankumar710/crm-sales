@@ -21,12 +21,15 @@ app.use((req, res, next) => {
   next();
 });
 
-
-
 import { authRouter } from "./routes/auth.route.js";
 
-app.use("/api/v1", authRouter)
+app.use("/api/v1", authRouter);
 
+import { roleRouter } from "./routes/role.auth.js";
+app.use("/api/v1", roleRouter);
+
+import { employeeRouter } from "./routes/employee.route.js";
+app.use("/api/v1", employeeRouter)
 
 app.use((err, req, res, next) => {
   if (err instanceof APIError) {
@@ -34,13 +37,13 @@ app.use((err, req, res, next) => {
       success: err.success,
       message: err.message,
       errors: err.errors,
-      data: err.data
+      data: err.data,
     });
   }
 
-    res.status(500).json({
+  res.status(500).json({
     success: false,
-    message: "Internal Server Error"
+    message: "Internal Server Error",
   });
 });
 

@@ -1,4 +1,4 @@
-import { Employee } from "../models/employee.model";
+import { Employee } from "../models/employee.model.js";
 
 export const createEmployee = async (
 { organisationID,
@@ -29,4 +29,6 @@ export const createEmployee = async (
     ],
     option
   );
+
+  return createEmployee
 };

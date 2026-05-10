@@ -9,12 +9,16 @@ import { PhoneInputField } from "../../components/InputFields/PhoneInputField.js
 import { PasswordInputField } from "../../components/InputFields/PasswordInputField.jsx";
 import { FileInputField } from "../../components/InputFields/FileInputField.jsx";
 import { PrimaryButton } from "../../components/Buttons/PrimaryButton.component.jsx";
-import { useGetMeQuery, useRegisterMutation } from "../../features/auth/authAPI.js";
+import {
+  useGetMeQuery,
+  useRegisterMutation,
+} from "../../features/auth/authAPI.js";
 
 export const Registration = () => {
-  const [register, {data, isLoading, error, isSuccess}] = useRegisterMutation()
+  const [register, { data, isLoading, error, isSuccess }] =
+    useRegisterMutation();
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   // const { loading, error, success } = useSelector((state) => state.auth);
 
   const [form, setForm] = useState({
@@ -28,7 +32,6 @@ export const Registration = () => {
     phoneNumber: "",
     password: "",
   });
-
 
   function handleChange(e) {
     setForm({
@@ -44,14 +47,13 @@ export const Registration = () => {
     });
   }
 
- async function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-   
 
     const data = new FormData();
 
     data.append("companyName", form.companyName);
-    data.append("logo", form.companyLogo); // 
+    data.append("logo", form.companyLogo); //
     data.append("headOfficeName", form.headOfficeName);
     data.append("superAdminEmail", form.superAdminEmail);
     data.append("adminName", form.adminName);
@@ -62,21 +64,21 @@ export const Registration = () => {
 
     // dispatch(registerOrganisation(data));
 
-    try{
-      const res = await register(data).unwrap()
-      console.log(res)
-      dispatch(setEmployee(res.data))
+    try {
+      const res = await register(data).unwrap();
+      console.log(res);
+      dispatch(setEmployee(res.data));
       console.log("DISPATCH DONE");
-      console.log(res.data)
-      navigate("/adminDashboard")
-    }catch(e){
-      console.log(e)
+      console.log(res.data);
+      navigate("/adminDashboard");
+    } catch (e) {
+      console.log(e);
     }
   }
 
   return (
     <>
-      < div className="formSection">
+      <div className="formSection">
         <LoginRegisterBanner />
         <div className="formContainer">
           <form method="post" className="glassEffect" onSubmit={handleSubmit}>
@@ -123,7 +125,7 @@ export const Registration = () => {
               <PlainInputField
                 type="text"
                 placeholder="e.g Aryan Kumar"
-                value={form.adminName }
+                value={form.adminName}
                 name="adminName"
                 onChange={handleChange}
                 label="Admin Name*"
@@ -154,7 +156,7 @@ export const Registration = () => {
                 label={"Password*"}
                 type={"password"}
                 placeholder={"••••••••"}
-                value={form.password }
+                value={form.password}
                 onChange={handleChange}
                 required={true}
               />

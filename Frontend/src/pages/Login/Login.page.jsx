@@ -13,7 +13,7 @@ export const Login = () => {
   const [form, setForm] = useState({ employeeEmail: "", password: "" });
   const [login, { data, isLoading, isSuccess, error }] = useLoginMutation();
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value });
