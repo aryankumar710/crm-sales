@@ -45,7 +45,7 @@
 }
 
 .employeeStatus h6 {
-  font-size: 0.625rem;
+  font-size: 0.75rem;
   font-weight: 400;
   color: var(--primary-font-color);
 }
@@ -62,22 +62,25 @@
   width: 0.5rem;
 }
 
-table {
-  padding-left: 0.25rem;
-  padding-right: 0.25rem;
-}
 
-td,
-th {
-  text-align: left;
-  padding: 1.5rem;
-  padding-left: 3rem;
-  margin: 0;
-}
 
 .tableTabs {
   background-color: var(--surface);
   padding: 0.875rem 1.5rem;
+}
+
+.pagination{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem; 
+}
+
+.pagination span{
+  font-family: "Poppins", sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--primary-font-color);
 }
 
 

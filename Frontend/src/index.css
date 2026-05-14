@@ -134,4 +134,40 @@ form h1 {
   align-items: center;
 }
 
+button{
+  background: none;
+  border: none;
+}
 
+table {
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+}
+
+tbody{
+  gap: 1rem;
+}
+
+td,
+th {
+  text-align: left;
+  padding: 1.5rem;
+  padding-left: 3rem;
+  margin: 0;
+  gap:0
+}
+
+tr{
+  margin-top: 1rem;
+}
+
+th{
+  font-family: "Poppins", sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+td{
+  font-family: "Poppins", sans-serif;
+  font-size: 0.825rem;
+}

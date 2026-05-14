@@ -13,6 +13,9 @@ export const authApi = createApi({
     baseUrl: "/api/v1",
     credentials: "include"
   }),
+
+    tagTypes: ["Employees", "Roles"],
+
   endpoints: (builder) => ({
     register: builder.mutation({
       query: (data) => ({
@@ -32,8 +35,35 @@ export const authApi = createApi({
         method: "POST",
         body: data
       })
+    }),
+
+    getRoles: builder.query({
+      query:()=>"/roleNameApi",
+     providesTags : ["Roles"]
+    }),
+
+    getEmployeesByRole: builder.query({
+      query: (roleName)=> ({
+        url: "/roleSelectionEmployeeList",
+        params: {roleName}
+      })
+    }),
+
+    addEmployee: builder.mutation({
+      query: (data)=> ({
+        url: "/addNewEmployee",
+        method: "POST",
+        body: data,
+        
+      }),
+      invalidatesTags: ["Employees"]
+    }),
+
+    getEmployees: builder.query({
+      query:({page=1, limit=10})=>`/employeeData?page=${page}&limit=${limit}`,
+      providesTags: ["Employees"]
     })
   }),
 });
 
-export const {useRegisterMutation, useGetMeQuery, useLoginMutation} = authApi;
+export const {useRegisterMutation, useGetMeQuery, useLoginMutation, useGetRolesQuery, useGetEmployeesByRoleQuery, useAddEmployeeMutation, useGetEmployeesQuery} = authApi;

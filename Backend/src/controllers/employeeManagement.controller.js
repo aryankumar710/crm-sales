@@ -17,7 +17,7 @@ const createNewEmployee = async (req, res) => {
       reportingPerson,
     } = req.body;
 
-    console.log(req.body)
+//    console.log(req.body)
 
     if (
       [
@@ -34,7 +34,7 @@ const createNewEmployee = async (req, res) => {
     }
 
     const existingEmployee = await Employee.findOne({employeeEmail:employeeEmail});
-    console.log(existingEmployee)
+ //   console.log(existingEmployee)
 
     if (existingEmployee) {
       throw new APIError(409, "Employee with same email exist");
@@ -45,10 +45,10 @@ const createNewEmployee = async (req, res) => {
     const generateInviteToken = await crypto.randomBytes(32).toString("hex");
 
     const employeeRoleId = await Role.findOne({roleName:employeeRole, organisationID:organisationID}).select("_id")
-    console.log(employeeRoleId)
+  //  console.log(employeeRoleId)
 
     const reportingPersonId = await Employee.findOne({employeeName:reportingPerson , organisationID:organisationID}).select("_id")
-    console.log(reportingPersonId)
+  //  console.log(reportingPersonId)
 
     const employeeData = await createEmployee({
       organisationID: organisationID,
@@ -61,7 +61,7 @@ const createNewEmployee = async (req, res) => {
       
     });
 
-    console.log(employeeData)
+   // console.log(employeeData)
 
     const link = `http://localhost:3000/set-password?token=${generateInviteToken}`;
 
@@ -73,13 +73,29 @@ const createNewEmployee = async (req, res) => {
 
     res.status(200).json(new APIResponse(200, employeeData, "Employee created"));
   } catch (error) {
-    console.log(error.message)
     res.status(error.statusCode || 500).json({
+      success: false,
+      message: error.message,
+    });    
+  }
+};
+
+const employeeData = async (req, res)=> {
+  try {
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+    const skip = (page-1)*limit
+    const organisationID = req.context.organisationID;
+    const totalEmployees = await Employee.countDocuments({organisationID:organisationID})
+    const data = await Employee.find({organisationID:organisationID}).populate("role reportingPerson").skip(skip).limit(limit).sort({createdAt:-1}).lean()
+    res.status(200).json(new APIResponse(200, {data, pagination: {page, limit, totalPages: Math.ceil(totalEmployees/limit)}}, "Employee data fetched"))
+  } catch (error) {
+     res.status(error.statusCode || 500).json({
       success: false,
       message: error.message,
     });
     
   }
-};
+}
 
-export {createNewEmployee}
+export {createNewEmployee, employeeData}

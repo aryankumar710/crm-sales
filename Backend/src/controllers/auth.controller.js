@@ -341,7 +341,7 @@ const loginEmployee = async (req, res) => {
         )
       );
   } catch (error) {
-    throw new APIError(500, "Error while login", error.message);
+    throw new APIError(500, "Error while login");
   }
 };
 
