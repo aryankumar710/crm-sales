@@ -15,7 +15,7 @@ import { PrimaryButton } from "../../components/Buttons/PrimaryButton.component.
 import { PlainInputField } from "../../components/inputFields/PlainInputfield.jsx";
 import { LoginRegisterBanner } from "../../components/LoginRegistration/LoginRegisterBanner.component.jsx";
 import { PasswordInputField } from "../../components/InputFields/PasswordInputField.jsx";
-import { AddEmployee } from "../EmployeeManagement/AddEmployee.page.jsx";
+import { AddEmployee } from "../AdminDashboardEmployeeManagement/AddEmployee.page.jsx";
 import { API } from "../../services/axios.js";
 
 export const AdminDashboard = () => {

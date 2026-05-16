@@ -4,7 +4,7 @@ import { PrimaryButton } from "../../components/Buttons/PrimaryButton.component.
 import { PlainInputField } from "../../components/inputFields/PlainInputfield.jsx";
 import { PhoneInputField } from "../../components/InputFields/PhoneInputField.jsx";
 import { PasswordInputField } from "../../components/InputFields/PasswordInputField.jsx";
-import styles from "../EmployeeManagement/EmployeeManagement.page.module.css";
+import styles from "../AdminDashboardEmployeeManagement/EmployeeManagement.page.module.css";
 import { Dropdown } from "../../components/InputFields/Dropdown.component.jsx";
 import { useState } from "react";
 import { useEffect } from "react";

@@ -10,8 +10,9 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-import { VerticalLayout } from "./pages/Layout/Layout.jsx";
+import { VerticalLayout } from "./layouts/Layout.jsx";
 import { Login } from "./pages/Login/Login.page.jsx";
+import { AdminRoles } from "./pages/AdminDashboardRoles/AdminRoles.page.jsx";
 
 function App() {
   const router = createBrowserRouter([
@@ -24,16 +25,21 @@ function App() {
       element: <VerticalLayout />,
       children: [{ path: "", element: <AdminDashboard /> }],
     },
-       {
+    {
       path: "/adminDashboard/addEmployee",
       element: <VerticalLayout />,
       children: [{ path: "", element: <AdminDashboard /> }],
     },
+    {
+      path: "/adminDashboardRoles",
+      element: <VerticalLayout/>,
+      children:[{path: "", element: <AdminRoles/>}]
+    },
 
     {
       path: "/login",
-      element:<Login/>,
-    }
+      element: <Login />,
+    },
   ]);
   return <RouterProvider router={router} />;
 }

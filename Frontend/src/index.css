@@ -15,6 +15,11 @@
   --surface: #f5f5f5;
 }
 
+.swiper-wrapper {
+   display: flex !important;
+   flex-direction: row !important;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
