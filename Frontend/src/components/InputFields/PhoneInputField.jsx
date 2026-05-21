@@ -190,9 +190,9 @@ export const PhoneInputField = ({
         </svg>
         <input
           type={type}
-            maxLength={10}
-  pattern="[0-9]{10}"
-  inputMode="numeric"
+          maxLength={10}
+          pattern="[0-9]{10}"
+          inputMode="numeric"
           value={value}
           onChange={(e) => {
             const input = e.target.value.replace(/\D/g, "");

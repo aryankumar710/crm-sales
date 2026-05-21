@@ -16,6 +16,11 @@ const EmployeeSchema = mongoose.Schema(
       trim: true,
     },
 
+    address: {
+      type: String,
+      trim: true
+    },
+
     employeeEmail: {
       type: String,
       required: true,
@@ -74,12 +79,14 @@ EmployeeSchema.pre("validate", async function(next){
 })
 
 EmployeeSchema.pre("validate", async function(next){
+    console.log("Phone:", this.phoneNumber);
   if(!this.role) return
 
   const role = await mongoose.model("Role").findById(this.role).session(this.$session())
 
   if(role?.roleName !== "Super Admin" && !this.phoneNumber){
     console.log(role?.roleName)
+      console.log("Phone:", this.phoneNumber);
  
     this.invalidate("phoneNumber", "phone number required") 
   }

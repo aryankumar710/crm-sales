@@ -17,6 +17,7 @@ import { LoginRegisterBanner } from "../../components/LoginRegistration/LoginReg
 import { PasswordInputField } from "../../components/InputFields/PasswordInputField.jsx";
 import { AddEmployee } from "../AdminDashboardEmployeeManagement/AddEmployee.page.jsx";
 import { API } from "../../services/axios.js";
+import {Table } from "../../components/Table/Table.component.jsx";
 
 export const AdminDashboard = () => {
   const dispatch = useDispatch();
@@ -25,31 +26,16 @@ export const AdminDashboard = () => {
   const employee = useSelector((state) => state.auth.employee);
   const { data, isLoading } = useGetMeQuery();
   const [page, setPage] = useState(1);
-  const limit = 8;
+  const limit = 10;
   const { data: getEmployeesData, isLoading: getEmployeesDataLoading } =
     useGetEmployeesQuery({ page, limit });
-
-  //const [employeeData, setEmployeeData] = useState([]);
 
   useEffect(() => {
     if (data) {
       dispatch(setEmployee(data?.data));
     }
   }, [data]);
-
-  // useEffect(() => {
-  //   const fetchEmployeeData = async () => {
-  //     try {
-  //       const response = await API.get("/employeeData");
-  //       console.log(response.data.data);
-  //       setEmployeeData(response.data.data);
-  //     } catch (error) {
-  //       console.log(error.message);
-  //     }
-  //   };
-  //   fetchEmployeeData();
-  // }, []);
-
+  
   const [isOpen, setOpen] = useState(false);
 
   function handleModal() {
@@ -191,16 +177,8 @@ export const AdminDashboard = () => {
             </thead>
 
             <tbody>
-              {getEmployeesData?.data?.data.map((data) => {
-                return (
-                  <tr key={data._id} className={styles.tableTabs}>
-                    <td>{data.employeeName}</td>
-                    <td>{data.employeeEmail}</td>
-                    <td>{data.phoneNumber}</td>
-                    <td>{data.role?.roleName}</td>
-                    <td>{data.reportingPerson?.employeeName}</td>
-                  </tr>
-                );
+              {getEmployeesData?.data?.getList?.map((data) => {
+                return <Table key={data._id} data={data} />;
               })}
             </tbody>
           </table>

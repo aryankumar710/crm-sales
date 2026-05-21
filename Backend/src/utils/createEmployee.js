@@ -9,6 +9,7 @@ export const createEmployee = async (
   role,
   reportingPerson,
   password,
+  address,
   invitationToken,
   session}
 ) => {
@@ -25,6 +26,7 @@ export const createEmployee = async (
         reportingPerson: reportingPerson,
         password: password,
         invitationToken: invitationToken,
+        address: address
       },
     ],
     option

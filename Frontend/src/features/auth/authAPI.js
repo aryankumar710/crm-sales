@@ -11,10 +11,10 @@ export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery: fetchBaseQuery({
     baseUrl: "/api/v1",
-    credentials: "include"
+    credentials: "include",
   }),
 
-    tagTypes: ["Employees", "Roles"],
+  tagTypes: ["Employees", "Roles"],
 
   endpoints: (builder) => ({
     register: builder.mutation({
@@ -30,40 +30,60 @@ export const authApi = createApi({
     }),
 
     login: builder.mutation({
-      query: (data)=> ({
+      query: (data) => ({
         url: "/login",
         method: "POST",
-        body: data
-      })
+        body: data,
+      }),
     }),
 
     getRoles: builder.query({
-      query:()=>"/roleNameApi",
-     providesTags : ["Roles"]
+      query: () => "/roleNameApi",
+      providesTags: ["Roles"],
     }),
 
     getEmployeesByRole: builder.query({
-      query: (roleName)=> ({
+      query: (roleName) => ({
         url: "/roleSelectionEmployeeList",
-        params: {roleName}
-      })
+        params: { roleName },
+      }),
     }),
 
     addEmployee: builder.mutation({
-      query: (data)=> ({
+      query: (data) => ({
         url: "/addNewEmployee",
         method: "POST",
         body: data,
-        
       }),
-      invalidatesTags: ["Employees"]
+      invalidatesTags: ["Employees"],
     }),
 
     getEmployees: builder.query({
-      query:({page=1, limit=10})=>`/employeeData?page=${page}&limit=${limit}`,
-      providesTags: ["Employees"]
-    })
+      query: ({ page, limit, roleName }) => ({
+        url: "/employeeData",
+        params: { page, limit, ...(roleName && { roleName }) },
+      }),
+      providesTags: ["Employees"],
+    }),
+
+    createRole: builder.mutation({
+      query: (data) => ({
+        url: "/createRole",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Roles"],
+    }),
   }),
 });
 
-export const {useRegisterMutation, useGetMeQuery, useLoginMutation, useGetRolesQuery, useGetEmployeesByRoleQuery, useAddEmployeeMutation, useGetEmployeesQuery} = authApi;
+export const {
+  useRegisterMutation,
+  useGetMeQuery,
+  useLoginMutation,
+  useGetRolesQuery,
+  useGetEmployeesByRoleQuery,
+  useAddEmployeeMutation,
+  useGetEmployeesQuery,
+  useCreateRoleMutation
+} = authApi;

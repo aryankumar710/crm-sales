@@ -19,9 +19,9 @@ const RoleSchema = mongoose.Schema(
       ref: "Role",
     },
 
-    order: {
-      type: Number,
-    },
+    // order: {
+    //   type: Number,
+    // },
 
     organisationID: {
       type: mongoose.Schema.Types.ObjectId,
@@ -31,16 +31,16 @@ const RoleSchema = mongoose.Schema(
   { timestamps: true }
 );
 
-RoleSchema.virtual("children",{
-    ref: "Role",
-    localField: "_id",
-    foreignField: "parentRole"
-});
+// RoleSchema.virtual("children",{
+//     ref: "Role",
+//     localField: "_id",
+//     foreignField: "parentRole"
+// });
 
-RoleSchema.set("toJSON", {virtual: true})
+// RoleSchema.set("toJSON", {virtuals: true})
 
-RoleSchema.set("toObject", {virtaul: true})
+// RoleSchema.set("toObject", {virtauls: true})
 
-RoleSchema.index({ organisationID: 1, parentRole: 1, order: 1}, {unique: true});
+// RoleSchema.index({ organisationID: 1, parentRole: 1, order: 1}, {unique: true});
 
 export const Role = mongoose.model("Role", RoleSchema);

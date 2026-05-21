@@ -1,4 +1,4 @@
-import { createPortal } from "react-dom";
+//import { createPortal } from "react-dom";
 import { Modal } from "../../components/Modals/Modal.component.jsx";
 import { PrimaryButton } from "../../components/Buttons/PrimaryButton.component.jsx";
 import { PlainInputField } from "../../components/inputFields/PlainInputfield.jsx";
@@ -7,27 +7,26 @@ import { PasswordInputField } from "../../components/InputFields/PasswordInputFi
 import styles from "../AdminDashboardEmployeeManagement/EmployeeManagement.page.module.css";
 import { Dropdown } from "../../components/InputFields/Dropdown.component.jsx";
 import { useState } from "react";
-import { useEffect } from "react";
-import { API } from "../../services/axios.js";
+//import { useEffect } from "react";
+//import { API } from "../../services/axios.js";
 import { CrossButton } from "../../components/Buttons/CrossButton.component.jsx";
-import { useAddEmployeeMutation, useGetEmployeesByRoleQuery, useGetRolesQuery } from "../../features/auth/authAPI.js";
+import { useAddEmployeeMutation, useGetEmployeesByRoleQuery, useGetEmployeesQuery, useGetRolesQuery } from "../../features/auth/authAPI.js";
 
 export const AddEmployee = ({ isOpen, onClose }) => {
   //
   const [roleList, setRoleList] = useState([]);
-  const [role, setRole] = useState({
-    reportingRoleName: ""
-  });
+  const [role, setRole] = useState("");
 
   const {data: rolesData, isLoading: rolesLoading} = useGetRolesQuery()
-  const {data: employeeData, isLoading: employeeLoading}= useGetEmployeesByRoleQuery(role.reportingRoleName)
+  const {data: employeeData, isLoading: employeeLoading} = useGetEmployeesQuery({roleName : role})
   const [addEmployee, { isLoading: addEmployeeLoading, error, isSuccess}] = useAddEmployeeMutation()
   const [form, setForm] = useState({
     employeeName: "",
     employeeRole: "",
     employeeEmail: "",
-    employeePhoneNumber: "",
+    phoneNumber: "",
     reportingPerson: "",
+    address: ""
   });
 
   function onChange(e) {
@@ -101,6 +100,15 @@ export const AddEmployee = ({ isOpen, onClose }) => {
             label="Employee Name*"
             required={true}
           />
+                    <PlainInputField
+            onChange={onChange}
+            type="text"
+            placeholder="e.g Saket"
+            name="address"
+            label="Address*"
+            
+          />
+
 
           <PlainInputField
             onChange={onChange}
@@ -114,7 +122,7 @@ export const AddEmployee = ({ isOpen, onClose }) => {
           <PhoneInputField
             onChange={onChange}
             type={"tel"}
-            name={"employeePhoneNumber"}
+            name={"phoneNumber"}
             placeholder={"e.g 82993146XX"}
             label={"Phone Number*"}
             required={true}
@@ -132,9 +140,9 @@ export const AddEmployee = ({ isOpen, onClose }) => {
             name={"roleName"}
             label={"Select Reporting Role"}
             onChange={(e) =>
-              setRole({ ...role, reportingRoleName: e.target.value })
+              setRole(e.target.value)
             }
-            value={role.reportingRoleName}
+            value={role}
             options={rolesData?.data || []}
           />
 
@@ -145,7 +153,7 @@ export const AddEmployee = ({ isOpen, onClose }) => {
               setForm({ ...form, reportingPerson: e.target.value })
             }
             value={form.reportingPerson}
-            options={employeeData?.data || []}
+            options={employeeData?.data?.getList || []}
           />
         </div>
 

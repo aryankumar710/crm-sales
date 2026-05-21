@@ -7,22 +7,39 @@ export const createRole = async ({
   organisationID,
   session,
 }) => {
-  const lastRole = await Role.findOne({ parentRole, organisationID })
-    .sort({ order: -1 })
-    .limit(1);
+  const role = await Role.findOne({
+    roleName: parentRole,
+    organisationID
+  });
+
+  if (!role) {
+    throw new Error("Parent role not found");
+  }
+
+  const parentRoleId = role._id;
+
+  // Get last child role
+  // const lastRole = await Role.find({
+  //   parentRole: parentRoleId,
+  //   organisationID
+  // })
+  // .sort({ order: -1 })
+  // .limit(1);
   const option = session ? { session } : {};
 
-  await Role.createRole(
+ const newRole = await Role.create(
     [
       {
         roleName: roleName,
         roleType: roleType,
-        parentRole: parentRole._id,
+        parentRole: parentRoleId,
         organisationID: organisationID,
-        order: lastRole.length ? lastRole.order + 1 : 1,
+       // order: lastRole.length ? lastRole.order + 1 : 1,
       },
     ],
     option
   );
+
+  return newRole;
 };
 1

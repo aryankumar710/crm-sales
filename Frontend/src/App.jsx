@@ -37,6 +37,12 @@ function App() {
     },
 
     {
+      path: "/adminDashboardRoles/createRoles",
+      element: <VerticalLayout/>,
+      children:[{path: "", element: <AdminRoles/>}]
+    },
+
+    {
       path: "/login",
       element: <Login />,
     },

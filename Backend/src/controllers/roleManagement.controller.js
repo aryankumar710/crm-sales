@@ -10,7 +10,7 @@ const createRoleAPI = async (req, res) => {
 
     if (
       [roleName, parentRole].some((field) => {
-        return field.trim === "";
+        return field.trims === "";
       })
     ) {
       throw new APIError(400, "All filed must be field");
@@ -23,24 +23,32 @@ const createRoleAPI = async (req, res) => {
       organisationID,
     });
 
-    if (!existingRole) {
+    if (existingRole) {
       throw new APIError(409, "Role with same name exist");
     }
 
-    const createRole = await createRole({
+    // const parentRoleId = await Role.findOne({
+    //   parentRole,
+    //   organisationID,
+    // });
+
+    const newRole = await createRole({
       roleName: roleName,
       parentRole: parentRole,
       roleType: roleType,
       organisationID: organisationID,
     });
 
-    if (!createRole) {
+    if (!newRole) {
       throw new APIError(500, "Something went wrong while adding role");
     }
 
-    res.status(200).json(new APIResponse(200, createRole, "Role created"));
+    res.status(200).json(new APIResponse(200, newRole, "Role created"));
   } catch (error) {
-    throw new APIError(500, "something went wrong while creating new role");
+    res.status(error.statusCode || 500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
 
@@ -54,7 +62,7 @@ const roleNameApi = async (req, res) => {
       throw new APIError(409, "Can't fetch roles");
     }
 
-    const roleList = roles.map((obj) => obj.roleName);
+    // const roleList = roles.map((obj) => obj.roleName);
 
     res.status(200).json(new APIResponse(200, roles, "Role fetched"));
   } catch (error) {
@@ -66,31 +74,42 @@ const roleSelectionEmployeeList = async (req, res) => {
   try {
     const organisationID = req.context.organisationID;
     const { roleName } = req.query;
-    console.log(roleName)
-    if(!roleName){
-      throw new APIError(409,"Error")
+    console.log(roleName);
+    if (!roleName) {
+      throw new APIError(409, "Error");
     }
-    const role = await Role.findOne({roleName:roleName, organisationID: organisationID,})
-    console.log(role)
-    if(!role){
-      throw new APIError(409, "Role not found while fetch api for rple selection employee list")
+    const role = await Role.findOne({
+      roleName: roleName,
+      organisationID: organisationID,
+    });
+    console.log(role);
+    if (!role) {
+      throw new APIError(
+        409,
+        "Role not found while fetch api for role selection employee list"
+      );
     }
 
     const getList = await Employee.find({
       role: role._id,
       organisationID: organisationID,
-    })
-      .select("employeeName")
-      .lean();
-      console.log(getList)
+    }).lean();
+    console.log(getList);
     if (!getList) {
       throw new APIError(409, "Employee List not fetched");
     }
 
-    res.status(200).json(new APIResponse(200, getList, "Role Selection Employee List Fetched"))
+    res
+      .status(200)
+      .json(
+        new APIResponse(200, getList, "Role Selection Employee List Fetched")
+      );
   } catch (error) {
-    throw new APIError(500, "Something went wrong while fetching role selection employee list")
-    console.log(error)
+    throw new APIError(
+      500,
+      "Something went wrong while fetching role selection employee list"
+    );
+    console.log(error);
   }
 };
 

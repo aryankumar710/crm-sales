@@ -38,7 +38,7 @@
 }
 
 .roleTab {
-  padding: 12px 24px;
+  padding: 0.75rem 3.25rem;
   border-radius: 0.25rem;
   cursor: pointer;
   transform: skewX(-15deg);
@@ -48,4 +48,63 @@
 .roleTab span {
   display: flex;
   transform: skewX(15deg);
+  color: var(--positive);
+  font-weight: 500;
+}
+.active  {
+  background-color: var(--positive);
+}
+
+.active span{
+  color: white !important;
+}
+
+.slider {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.875rem 1.5rem;
+  padding-bottom: 0;
+}
+
+.employeeStatusAlignment {
+  display: flex;
+  gap: 1rem;
+}
+
+.employeeStatus {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.employeeStatus h6 {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--primary-font-color);
+}
+
+.greenBox {
+  background-color: var(--background-positive);
+  height: 0.5rem;
+  width: 0.5rem;
+}
+
+.redBox {
+  background-color: var(--background-negative);
+  height: 0.5rem;
+  width: 0.5rem;
+}
+
+.pagination{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem; 
+}
+
+.pagination span{
+  font-family: "Poppins", sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--primary-font-color);
 }
