@@ -132,7 +132,7 @@ const register = async (req, res) => {
 
       console.log(createsuperAdmin);
 
-      const link = `http://localhost:3000/set-password?token=${generateInviteToken}`;
+      const link = `http://localhost:8000/set-password?token=${generateInviteToken}`;
 
       console.log(link);
 
@@ -208,7 +208,7 @@ const register = async (req, res) => {
     res
       .status(201)
       .cookie("accessToken", accessToken, option)
-      .cookie("aefreshToken", refreshToken, option)
+      .cookie("refreshToken", refreshToken, option)
       .json(
         new APIResponse(
           201,
@@ -247,36 +247,72 @@ const getInviteToken = async (req, res) => {
   try {
     const employee = req.employee;
     res.json({
-      employeeName: employee.companyName,
+      employeeName: employee.employeeName,
       employeeEmail: employee.employeeEmail,
     });
   } catch (error) {
-    throw new APIError(500, "Error while token validating" || error.message);
+    throw new APIError(500, error.message);
   }
 };
 
 const registerSuperAdmin = async (req, res) => {
   try {
-    const { employeeName, phoneNumber, password } = req.body;
+    const { employeeName, phoneNumber, password, employeeEmail } = req.body;
 
     if (
-      [employeeName, phoneNumber, password].some((field) => {
+      [employeeName, phoneNumber, password, employeeEmail].some((field) => {
         return field?.trim() === "";
       })
     ) {
       throw new APIError(400, "All fields must be filled");
     }
 
-    const superAdmin = await Employee.findById(req.employee._id);
-    superAdmin.employeeName = employeeName;
-    superAdmin.phoneNumber = phoneNumber;
-    superAdmin.password = password;
+    const loggedInEmployee = await Employee.findOne({
+      employeeEmail: employeeEmail,
+    });
+    loggedInEmployee.employeeName = employeeName;
+    loggedInEmployee.phoneNumber = phoneNumber;
+    loggedInEmployee.password = password;
 
-    await superAdmin.save();
+    console.log(loggedInEmployee)
 
-    res.status(200).json(new APIResponse(200, superAdmin));
+    if (!loggedInEmployee) {
+      throw new APIError(400, "Employee not found");
+    }
+
+    const loggedInOrganisation = await Organisation.findById(
+      loggedInEmployee?.organisationID
+    );
+    console.log(loggedInOrganisation)
+
+    if (!loggedInOrganisation) {
+      throw new APIError(400, "Organisation not found");
+    }
+
+    await loggedInEmployee.save();
+
+    const { accessToken, refreshToken } =
+      await generateAccessTokenAndRefreshToken(loggedInEmployee._id);
+
+    const option = {
+      httpOnly: true,
+      secure: false,
+      sameSite: "Lax",
+    };
+
+    res
+      .status(201)
+      .cookie("accessToken", accessToken, option)
+      .cookie("refreshToken", refreshToken, option)
+      .json(
+        new APIResponse(
+          201,
+          { loggedInEmployee, loggedInOrganisation },
+          "User fetched"
+        )
+      );
   } catch (error) {
-    throw new APIError(500, "Error while setting password" || error.message);
+    throw new APIError(500, error.message);
   }
 };
 
@@ -309,9 +345,9 @@ const loginEmployee = async (req, res) => {
     const { accessToken, refreshToken } =
       await generateAccessTokenAndRefreshToken(employee._id);
 
-    const loggedInEmployee = await Employee.findById(employee._id).select(
-      "-password -refreshToken"
-    );
+    const loggedInEmployee = await Employee.findById(employee._id)
+      .select("-password -refreshToken")
+      .populate("role");
 
     if (!loggedInEmployee) {
       throw new APIError(400, "Employee not found");

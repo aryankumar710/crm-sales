@@ -1,0 +1,188 @@
+import { AnalysisCard } from "../../components/AnalysisCard/AnalysisCard.component.jsx";
+import { useSelector } from "react-redux";
+import styles from "../EmployeeDashboard/EmployeeDashboard.page.module.css";
+import Typography from "@mui/material/Typography";
+import Slider from "@mui/material/Slider";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import { BarChart } from "@mui/x-charts/BarChart";
+import { useState } from "react";
+import Box from "@mui/material/Box";
+
+export const EmployeeDashboard = () => {
+  const employee = useSelector((state) => state.auth.employee);
+  const [seriesNb, setSeriesNb] = useState(2);
+  const [itemNb, setItemNb] = useState(12);
+  const [skipAnimation, setSkipAnimation] = useState(false);
+
+  const handleItemNbChange = (event, newValue) => {
+    if (typeof newValue !== "number") {
+      return;
+    }
+    setItemNb(newValue);
+  };
+  const handleSeriesNbChange = (event, newValue) => {
+    if (typeof newValue !== "number") {
+      return;
+    }
+    setSeriesNb(newValue);
+  };
+  return (
+    <>
+      <div className={styles.mainbox}>
+        <div className={styles.firstHalf}>
+          <section className="glassEffect">
+            <div className="subSection">
+              <h1 className={styles.mainHeading}>Sales Pipeline</h1>
+              <div className="dashboardData">
+                <AnalysisCard
+                  content={"Total Employee"}
+                  data={5000}
+                  lastMonthData={456}
+                  comparisonPercentage={"-2%"}
+                />
+                <AnalysisCard
+                  content={"Total Employee"}
+                  data={5000}
+                  lastMonthData={456}
+                  comparisonPercentage={"-2%"}
+                />
+              </div>
+              <div className="dashboardData">
+                <AnalysisCard
+                  content={"Total Employee"}
+                  data={5000}
+                  lastMonthData={456}
+                  comparisonPercentage={"-2%"}
+                />
+                <AnalysisCard
+                  content={"Total Employee"}
+                  data={5000}
+                  lastMonthData={456}
+                  comparisonPercentage={"-2%"}
+                />
+              </div>
+            </div>
+          </section>
+          <section className="glassEffect">
+            <div className="subSection">
+              <h1 className={styles.mainHeading}>Deals Performance Chart</h1>
+              <Box
+                sx={{
+                  width: "100%",
+                  paddingBottom: "1rem",
+                  paddingRight: "1rem",
+                  paddingTop: "0.5rem",
+                }}
+                className={styles.boxColor}
+              >
+                <BarChart
+                  height={400}
+                  xAxis={[
+                    {
+                      scaleType: "band",
+                      data: [
+                        "Jan",
+                        "Feb",
+                        "Mar",
+                        "Apr",
+                        "May",
+                        "Jun",
+                        "Jul",
+                        "Aug",
+                        "Sep",
+                        "Oct",
+                        "Nov",
+                        "Dec",
+                      ],
+                      categoryGapRatio: 0.7, // Increased gap between categories
+                      barGapRatio: 0.1,
+                    },
+                  ]}
+                  sx={{
+                    "& .MuiBarElement-root": {
+                      rx: 6,
+                      ry: 6,
+                    },
+                  }}
+                  yAxis={[
+                    {
+                      tickMarkInterval: "line",
+                      tickMarkStrokeDasharray: "2 2", // Dotted lines
+                    },
+                  ]}
+                  slotProps={{
+                    legend: {
+                      position: {
+                        vertical: "bottom",
+                        horizontal: "end",
+                      },
+                    },
+                  }}
+                  series={series}
+                  categorygapratio={0.8}
+                  barGapRatio={0.8}
+                  margin={{ left: 50, right: 20, top: 20, bottom: 30 }}
+                />
+              </Box>
+            </div>
+          </section>
+        </div>
+
+        <div className={styles.secondHalf}>
+          <section className="glassEffect">
+            <div className="subSection">
+              <h1 className={styles.mainHeading}>Recent Leads</h1>
+              <div className={styles.recentLeadsBox}>
+                <div className={styles.headingSection}>
+                  <h3>Softech Info Solutions</h3>
+                  <div className={styles.date}>
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 14 14"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M9.91667 8.16667C10.0714 8.16667 10.2197 8.10521 10.3291 7.99581C10.4385 7.88642 10.5 7.73804 10.5 7.58333C10.5 7.42862 10.4385 7.28025 10.3291 7.17085C10.2197 7.06146 10.0714 7 9.91667 7C9.76196 7 9.61358 7.06146 9.50419 7.17085C9.39479 7.28025 9.33333 7.42862 9.33333 7.58333C9.33333 7.73804 9.39479 7.88642 9.50419 7.99581C9.61358 8.10521 9.76196 8.16667 9.91667 8.16667ZM9.91667 10.5C10.0714 10.5 10.2197 10.4385 10.3291 10.3291C10.4385 10.2197 10.5 10.0714 10.5 9.91667C10.5 9.76196 10.4385 9.61358 10.3291 9.50419C10.2197 9.39479 10.0714 9.33333 9.91667 9.33333C9.76196 9.33333 9.61358 9.39479 9.50419 9.50419C9.39479 9.61358 9.33333 9.76196 9.33333 9.91667C9.33333 10.0714 9.39479 10.2197 9.50419 10.3291C9.61358 10.4385 9.76196 10.5 9.91667 10.5ZM7.58333 7.58333C7.58333 7.73804 7.52187 7.88642 7.41248 7.99581C7.30308 8.10521 7.15471 8.16667 7 8.16667C6.84529 8.16667 6.69692 8.10521 6.58752 7.99581C6.47812 7.88642 6.41667 7.73804 6.41667 7.58333C6.41667 7.42862 6.47812 7.28025 6.58752 7.17085C6.69692 7.06146 6.84529 7 7 7C7.15471 7 7.30308 7.06146 7.41248 7.17085C7.52187 7.28025 7.58333 7.42862 7.58333 7.58333ZM7.58333 9.91667C7.58333 10.0714 7.52187 10.2197 7.41248 10.3291C7.30308 10.4385 7.15471 10.5 7 10.5C6.84529 10.5 6.69692 10.4385 6.58752 10.3291C6.47812 10.2197 6.41667 10.0714 6.41667 9.91667C6.41667 9.76196 6.47812 9.61358 6.58752 9.50419C6.69692 9.39479 6.84529 9.33333 7 9.33333C7.15471 9.33333 7.30308 9.39479 7.41248 9.50419C7.52187 9.61358 7.58333 9.76196 7.58333 9.91667ZM4.08333 8.16667C4.23804 8.16667 4.38642 8.10521 4.49581 7.99581C4.60521 7.88642 4.66667 7.73804 4.66667 7.58333C4.66667 7.42862 4.60521 7.28025 4.49581 7.17085C4.38642 7.06146 4.23804 7 4.08333 7C3.92862 7 3.78025 7.06146 3.67085 7.17085C3.56146 7.28025 3.5 7.42862 3.5 7.58333C3.5 7.73804 3.56146 7.88642 3.67085 7.99581C3.78025 8.10521 3.92862 8.16667 4.08333 8.16667ZM4.08333 10.5C4.23804 10.5 4.38642 10.4385 4.49581 10.3291C4.60521 10.2197 4.66667 10.0714 4.66667 9.91667C4.66667 9.76196 4.60521 9.61358 4.49581 9.50419C4.38642 9.39479 4.23804 9.33333 4.08333 9.33333C3.92862 9.33333 3.78025 9.39479 3.67085 9.50419C3.56146 9.61358 3.5 9.76196 3.5 9.91667C3.5 10.0714 3.56146 10.2197 3.67085 10.3291C3.78025 10.4385 3.92862 10.5 4.08333 10.5Z"
+                        fill="#777777"
+                      />
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M4.08332 1.02083C4.19935 1.02083 4.31063 1.06692 4.39268 1.14897C4.47473 1.23102 4.52082 1.3423 4.52082 1.45833V1.90341C4.90699 1.89583 5.33224 1.89583 5.80007 1.89583H8.19932C8.66774 1.89583 9.09299 1.89583 9.47915 1.90341V1.45833C9.47915 1.3423 9.52525 1.23102 9.60729 1.14897C9.68934 1.06692 9.80062 1.02083 9.91665 1.02083C10.0327 1.02083 10.144 1.06692 10.226 1.14897C10.3081 1.23102 10.3542 1.3423 10.3542 1.45833V1.94074C10.5058 1.95241 10.6495 1.96719 10.7852 1.98508C11.4689 2.07724 12.0225 2.27091 12.4594 2.70724C12.8957 3.14416 13.0894 3.69774 13.1816 4.38141C13.2708 5.04641 13.2708 5.89516 13.2708 6.96733V8.19933C13.2708 9.27149 13.2708 10.1208 13.1816 10.7852C13.0894 11.4689 12.8957 12.0225 12.4594 12.4594C12.0225 12.8957 11.4689 13.0894 10.7852 13.1816C10.1202 13.2708 9.27149 13.2708 8.19932 13.2708H5.80124C4.72907 13.2708 3.87974 13.2708 3.21532 13.1816C2.53165 13.0894 1.97807 12.8957 1.54115 12.4594C1.10482 12.0225 0.911153 11.4689 0.818986 10.7852C0.729736 10.1202 0.729736 9.27149 0.729736 8.19933V6.96733C0.729736 5.89516 0.729736 5.04583 0.818986 4.38141C0.911153 3.69774 1.10482 3.14416 1.54115 2.70724C1.97807 2.27091 2.53165 2.07724 3.21532 1.98508C3.35143 1.96719 3.49513 1.95241 3.6464 1.94074V1.45833C3.6464 1.3424 3.69242 1.23121 3.77434 1.14918C3.85626 1.06714 3.96739 1.02098 4.08332 1.02083ZM3.33082 2.85249C2.74457 2.93124 2.40624 3.07941 2.15949 3.32616C1.91274 3.57291 1.76457 3.91124 1.68582 4.49749C1.6726 4.59666 1.66132 4.70147 1.65199 4.81191H12.348C12.3387 4.70147 12.3274 4.59647 12.3142 4.49691C12.2354 3.91066 12.0872 3.57233 11.8405 3.32558C11.5937 3.07883 11.2554 2.93066 10.6686 2.85191C10.0695 2.77141 9.27907 2.77024 8.16665 2.77024H5.83332C4.7209 2.77024 3.93107 2.77199 3.33082 2.85249ZM1.60415 6.99999C1.60415 6.50183 1.60415 6.06841 1.61174 5.68749H12.3882C12.3958 6.06841 12.3958 6.50183 12.3958 6.99999V8.16666C12.3958 9.27908 12.3947 10.0695 12.3142 10.6692C12.2354 11.2554 12.0872 11.5937 11.8405 11.8405C11.5937 12.0872 11.2554 12.2354 10.6686 12.3142C10.0695 12.3947 9.27907 12.3958 8.16665 12.3958H5.83332C4.7209 12.3958 3.93107 12.3947 3.33082 12.3142C2.74457 12.2354 2.40624 12.0872 2.15949 11.8405C1.91274 11.5937 1.76457 11.2554 1.68582 10.6686C1.60532 10.0695 1.60415 9.27908 1.60415 8.16666V6.99999Z"
+                        fill="#777777"
+                      />
+                    </svg>
+                    <h6>27-09-87</h6>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </>
+  );
+};
+
+const highlightScope = {
+  highlight: "series",
+  fade: "global",
+};
+
+const series = [
+  {
+    label: "Deals Won",
+    color: "#1D630F",
+    data: [2423, 2210, 764, 1879, 1478, 1373, 1891, 2171, 620, 1269, 724, 1707],
+  },
+  {
+    label: "Deals Lost",
+    color: "#630F11",
+    data: [
+      2362, 2254, 1962, 1336, 586, 1069, 2194, 1629, 2173, 2031, 1757, 862,
+    ],
+  },
+].map((s) => ({ ...s, highlightScope }));

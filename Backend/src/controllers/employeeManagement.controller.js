@@ -15,7 +15,7 @@ const createNewEmployee = async (req, res) => {
       employeeEmail,
       phoneNumber,
       reportingPerson,
-      address,
+     
     } = req.body;
 
     //    console.log(req.body)
@@ -27,7 +27,7 @@ const createNewEmployee = async (req, res) => {
         employeeEmail,
         phoneNumber,
         reportingPerson,
-        address,
+        
       ].some((field) => {
         return field?.trim() === "";
       })
@@ -68,7 +68,7 @@ const createNewEmployee = async (req, res) => {
       role: employeeRoleId._id,
       reportingPerson: reportingPersonId._id,
       phoneNumber: phoneNumber,
-      address: address,
+    
       invitationToken: generateInviteToken,
     });
 

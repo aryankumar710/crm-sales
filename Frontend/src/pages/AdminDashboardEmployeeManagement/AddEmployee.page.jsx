@@ -26,7 +26,7 @@ export const AddEmployee = ({ isOpen, onClose }) => {
     employeeEmail: "",
     phoneNumber: "",
     reportingPerson: "",
-    address: ""
+    
   });
 
   function onChange(e) {
@@ -99,14 +99,6 @@ export const AddEmployee = ({ isOpen, onClose }) => {
             name="employeeName"
             label="Employee Name*"
             required={true}
-          />
-                    <PlainInputField
-            onChange={onChange}
-            type="text"
-            placeholder="e.g Saket"
-            name="address"
-            label="Address*"
-            
           />
 
 

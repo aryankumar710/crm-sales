@@ -3,7 +3,6 @@ import jwt from "jsonwebtoken";
 
 import bcrypt from "bcrypt";
 
-
 const EmployeeSchema = mongoose.Schema(
   {
     organisationID: {
@@ -14,11 +13,6 @@ const EmployeeSchema = mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-    },
-
-    address: {
-      type: String,
-      trim: true
     },
 
     employeeEmail: {
@@ -67,30 +61,36 @@ const EmployeeSchema = mongoose.Schema(
   { timestamps: true }
 );
 
-EmployeeSchema.pre("validate", async function(next){
-  if(!this.role) return
+EmployeeSchema.pre("validate", async function (next) {
+  if (!this.role) return;
 
-  const role = await mongoose.model("Role").findById(this.role).session(this.$session())
+  const role = await mongoose
+    .model("Role")
+    .findById(this.role)
+    .session(this.$session());
 
-  if(role?.roleName === "HR Admin" && !this.password){
-    console.log(role?.roleName)
-    this.invalidate("password", "password required")   
+  if (role?.roleName === "HR Admin" && !this.password) {
+    console.log(role?.roleName);
+    this.invalidate("password", "password required");
   }
-})
+});
 
-EmployeeSchema.pre("validate", async function(next){
+EmployeeSchema.pre("validate", async function (next) {
+  console.log("Phone:", this.phoneNumber);
+  if (!this.role) return;
+
+  const role = await mongoose
+    .model("Role")
+    .findById(this.role)
+    .session(this.$session());
+
+  if (role?.roleName !== "Super Admin" && !this.phoneNumber) {
+    console.log(role?.roleName);
     console.log("Phone:", this.phoneNumber);
-  if(!this.role) return
 
-  const role = await mongoose.model("Role").findById(this.role).session(this.$session())
-
-  if(role?.roleName !== "Super Admin" && !this.phoneNumber){
-    console.log(role?.roleName)
-      console.log("Phone:", this.phoneNumber);
- 
-    this.invalidate("phoneNumber", "phone number required") 
+    this.invalidate("phoneNumber", "phone number required");
   }
-})
+});
 
 EmployeeSchema.pre("save", async function (next) {
   if (!this.isModified("password") || !this.password) return;

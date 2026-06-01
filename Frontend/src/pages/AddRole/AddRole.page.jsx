@@ -80,7 +80,7 @@ export const AddRole = ({ isOpen, onClose }) => {
           />
         </div>
 
-        <PrimaryButton type={"submit"} text={"Add Employee"}>
+        <PrimaryButton type={"submit"} text={"Create Role"}>
           <svg
             width="24"
             height="24"

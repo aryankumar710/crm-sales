@@ -62,7 +62,7 @@ export const AdminDashboard = () => {
             <TertiaryButton onClick={handleModal}>Add Employee</TertiaryButton>
           </div>
 
-          <div className={styles.dashboardData}>
+          <div className="dashboardData">
             <AnalysisCard
               content={"Total Employee"}
               data={5000}

@@ -175,3 +175,10 @@ td{
   font-family: "Poppins", sans-serif;
   font-size: 0.825rem;
 }
+
+.dashboardData {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 1.25rem;
+}

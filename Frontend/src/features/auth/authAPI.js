@@ -74,6 +74,21 @@ export const authApi = createApi({
       }),
       invalidatesTags: ["Roles"],
     }),
+
+    getToken: builder.query({
+      query: (token) => ({
+        url: "/getInviteDetails",
+        params: { token },
+      }),
+    }),
+
+    updateSuperAdmin: builder.mutation({
+      query: (data) => ({
+        url: "/setPassword",
+        method: "PATCH",
+        body: data
+      })
+    })
   }),
 });
 
@@ -85,5 +100,7 @@ export const {
   useGetEmployeesByRoleQuery,
   useAddEmployeeMutation,
   useGetEmployeesQuery,
-  useCreateRoleMutation
+  useCreateRoleMutation,
+  useGetTokenQuery,
+  useUpdateSuperAdminMutation,
 } = authApi;

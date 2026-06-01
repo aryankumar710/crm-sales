@@ -13,6 +13,8 @@ import {
 import { VerticalLayout } from "./layouts/Layout.jsx";
 import { Login } from "./pages/Login/Login.page.jsx";
 import { AdminRoles } from "./pages/AdminDashboardRoles/AdminRoles.page.jsx";
+import { EmployeeDashboard } from "./pages/EmployeeDashboard/EmployeeDashboard.page.jsx";
+import { SetPassword } from "./pages/SetPassword/SetPassword.page.jsx";
 
 function App() {
   const router = createBrowserRouter([
@@ -41,11 +43,19 @@ function App() {
       element: <VerticalLayout/>,
       children:[{path: "", element: <AdminRoles/>}]
     },
-
+    {
+      path:"/employeeDashboard",
+      element: <VerticalLayout/>,
+      children:[{path: "", element: <EmployeeDashboard/>}]
+    },
     {
       path: "/login",
       element: <Login />,
     },
+    {
+      path: "/set-password",
+      element:<SetPassword/>
+    }
   ]);
   return <RouterProvider router={router} />;
 }

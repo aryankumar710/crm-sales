@@ -22,7 +22,7 @@ authRouter.route("/register").post(
 
 authRouter.route("/getInviteDetails").get(inviteTokenValidate, getInviteToken);
 
-authRouter.route("/setPassword").post(inviteTokenValidate, registerSuperAdmin);
+authRouter.route("/setPassword").patch( registerSuperAdmin);
 
 authRouter.route("/login").post(loginEmployee);
 

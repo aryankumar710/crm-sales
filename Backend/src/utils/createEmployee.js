@@ -1,7 +1,7 @@
 import { Employee } from "../models/employee.model.js";
 
-export const createEmployee = async (
-{ organisationID,
+export const createEmployee = async ({
+  organisationID,
   employeeName,
   employeeEmail,
   phoneNumber,
@@ -9,10 +9,9 @@ export const createEmployee = async (
   role,
   reportingPerson,
   password,
-  address,
   invitationToken,
-  session}
-) => {
+  session,
+}) => {
   const option = session ? { session } : {};
 
   await Employee.create(
@@ -26,11 +25,10 @@ export const createEmployee = async (
         reportingPerson: reportingPerson,
         password: password,
         invitationToken: invitationToken,
-        address: address
       },
     ],
     option
   );
 
-  return createEmployee
+  return createEmployee;
 };
