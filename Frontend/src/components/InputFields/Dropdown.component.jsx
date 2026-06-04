@@ -1,7 +1,7 @@
 import styles from "../InputFields/InputField.component.module.css";
 import { createPortal } from "react-dom";
 
-export const Dropdown = ({ name, label, value, options, onChange }) => {
+export const Dropdown = ({ name, label, value, options, onChange}) => {
   return (
     <>
       <div className={styles.inputBox}>
@@ -14,7 +14,7 @@ export const Dropdown = ({ name, label, value, options, onChange }) => {
             </option>
           ))}
           <div>
-            <p>daa</p>
+            
           </div>
         </select>
       </div>

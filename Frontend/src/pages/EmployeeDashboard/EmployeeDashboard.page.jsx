@@ -10,7 +10,6 @@ import { useState } from "react";
 import Box from "@mui/material/Box";
 import { PrimaryButton } from "../../components/Buttons/PrimaryButton.component.jsx";
 
-
 //import { populationByEducationLevelPercentageSeries } from './populationByEducationLevel';
 
 export const EmployeeDashboard = () => {
@@ -18,6 +17,7 @@ export const EmployeeDashboard = () => {
   const [seriesNb, setSeriesNb] = useState(2);
   const [itemNb, setItemNb] = useState(12);
   const [skipAnimation, setSkipAnimation] = useState(false);
+  const [isOpen, setOpen] = useState(false);
 
   const handleItemNbChange = (event, newValue) => {
     if (typeof newValue !== "number") {
@@ -31,6 +31,16 @@ export const EmployeeDashboard = () => {
     }
     setSeriesNb(newValue);
   };
+
+  function handleModal() {
+    if (isOpen) {
+      setOpen(false);
+      navigate("/adminDashboard");
+    } else {
+      setOpen(true);
+      navigate("/adminDashboard/addEmployee");
+    }
+  }
   return (
     <>
       <div className={styles.mainbox}>
@@ -99,7 +109,7 @@ export const EmployeeDashboard = () => {
                         "Nov",
                         "Dec",
                       ],
-                      categoryGapRatio: 0.7, // Increased gap between categories
+                      categoryGapRatio: 0.7,
                       barGapRatio: 0.1,
                     },
                   ]}
@@ -230,7 +240,7 @@ export const EmployeeDashboard = () => {
                 </div>
               </div>
 
-              <PrimaryButton text={"New Lead"}>
+              <PrimaryButton text={"New Lead"} onClick={handleModal}>
                 <svg
                   width="24"
                   height="24"
@@ -250,7 +260,6 @@ export const EmployeeDashboard = () => {
           <section className="glassEffect">
             <div className="subSection">
               <h1 className={styles.mainHeading}>Funnel</h1>
-              
             </div>
           </section>
         </div>
@@ -278,7 +287,6 @@ const series = [
     ],
   },
 ].map((s) => ({ ...s, highlightScope }));
-
 
 const funnelData = [
   { label: "Leads", value: 1000 },

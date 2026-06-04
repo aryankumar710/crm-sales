@@ -1,0 +1,20 @@
+import { Leads } from "../models/leads.model"
+
+
+const createLeads = async({employeeID, clientName, projectInfo, status, source}) => {
+    const existingClient = Leads.findOne({clientName: clientName})
+
+    if(existingClient){
+        throw new APIError(409, "This client already exists")
+    }
+
+    const newLead = await Leads.create({
+        employeeID: employeeID,
+        clientName: clientName,
+        projectInfo: projectInfo,
+        status: status,
+        source: source
+    })
+
+    return newLead
+}

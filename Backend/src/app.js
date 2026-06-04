@@ -31,6 +31,9 @@ app.use("/api/v1", roleRouter);
 import { employeeRouter } from "./routes/employee.route.js";
 app.use("/api/v1", employeeRouter)
 
+import { leadsRouter } from "./routes/leads.route.js";
+app.use("/api/v1", leadsRouter)
+
 app.use((err, req, res, next) => {
   if (err instanceof APIError) {
     return res.status(err.statusCode).json({
