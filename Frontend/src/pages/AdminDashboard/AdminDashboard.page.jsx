@@ -2,13 +2,10 @@ import { useEffect, useState } from "react";
 import { AnalysisCard } from "../../components/AnalysisCard/AnalysisCard.component.jsx";
 import { TertiaryButton } from "../../components/Buttons/TertiaryButton.component.jsx";
 import { Header } from "../../components/Header/Header.component.jsx";
-import {
-  useGetEmployeesQuery,
-  useGetMeQuery,
-} from "../../features/auth/authAPI.js";
+import { useGetEmployeesQuery, useGetMeQuery } from "../../features/API/api.js";
 import styles from "../AdminDashboard/AdminDashboard.page.module.css";
 import { useDispatch, useSelector } from "react-redux";
-import { setEmployee } from "../../features/auth/authSlice.js";
+import { setEmployee } from "../../features/API/slice.js";
 import { Modal } from "../../components/Modals/Modal.component.jsx";
 import { useLocation, useNavigate } from "react-router-dom";
 import { PrimaryButton } from "../../components/Buttons/PrimaryButton.component.jsx";
@@ -16,8 +13,7 @@ import { PlainInputField } from "../../components/inputFields/PlainInputfield.js
 import { LoginRegisterBanner } from "../../components/LoginRegistration/LoginRegisterBanner.component.jsx";
 import { PasswordInputField } from "../../components/InputFields/PasswordInputField.jsx";
 import { AddEmployee } from "../AdminDashboardEmployeeManagement/AddEmployee.page.jsx";
-import { API } from "../../services/axios.js";
-import {Table } from "../../components/Table/Table.component.jsx";
+import { Table } from "../../components/Table/Table.component.jsx";
 
 export const AdminDashboard = () => {
   const dispatch = useDispatch();
@@ -35,7 +31,7 @@ export const AdminDashboard = () => {
       dispatch(setEmployee(data?.data));
     }
   }, [data]);
-  
+
   const [isOpen, setOpen] = useState(false);
 
   function handleModal() {
@@ -82,7 +78,7 @@ export const AdminDashboard = () => {
               comparisonPercentage={"-2%"}
             />
           </div>
-          <div className={styles.dashboardData}>
+          <div className="dashboardData">
             <AnalysisCard
               content={"Total Employee"}
               data={5000}

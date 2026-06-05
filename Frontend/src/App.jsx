@@ -15,6 +15,7 @@ import { Login } from "./pages/Login/Login.page.jsx";
 import { AdminRoles } from "./pages/AdminDashboardRoles/AdminRoles.page.jsx";
 import { EmployeeDashboard } from "./pages/EmployeeDashboard/EmployeeDashboard.page.jsx";
 import { SetPassword } from "./pages/SetPassword/SetPassword.page.jsx";
+import { AddLeads } from "./pages/AddLeads/AddLeads.page.jsx";
 
 function App() {
   const router = createBrowserRouter([
@@ -34,28 +35,36 @@ function App() {
     },
     {
       path: "/adminDashboardRoles",
-      element: <VerticalLayout/>,
-      children:[{path: "", element: <AdminRoles/>}]
+      element: <VerticalLayout />,
+      children: [{ path: "", element: <AdminRoles /> }],
     },
 
     {
       path: "/adminDashboardRoles/createRoles",
-      element: <VerticalLayout/>,
-      children:[{path: "", element: <AdminRoles/>}]
+      element: <VerticalLayout />,
+      children: [{ path: "", element: <AdminRoles /> }],
     },
-    {
-      path:"/employeeDashboard",
-      element: <VerticalLayout/>,
-      children:[{path: "", element: <EmployeeDashboard/>}]
-    },
+{
+  path: "/employeeDashboard",
+  element: <VerticalLayout />,
+  children: [
+    { path: "", element: <EmployeeDashboard /> },
+    {path: "addLead", element: <EmployeeDashboard />}
+  ],
+},
+// {
+//   path: "/employeeDashboard/addLead",
+//   element: <VerticalLayout />,
+//       children: [{ path: "", element: <EmployeeDashboard/>}],
+// },
     {
       path: "/login",
       element: <Login />,
     },
     {
       path: "/set-password",
-      element:<SetPassword/>
-    }
+      element: <SetPassword />,
+    },
   ]);
   return <RouterProvider router={router} />;
 }

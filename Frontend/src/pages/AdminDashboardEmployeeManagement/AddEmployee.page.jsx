@@ -10,23 +10,29 @@ import { useState } from "react";
 //import { useEffect } from "react";
 //import { API } from "../../services/axios.js";
 import { CrossButton } from "../../components/Buttons/CrossButton.component.jsx";
-import { useAddEmployeeMutation, useGetEmployeesByRoleQuery, useGetEmployeesQuery, useGetRolesQuery } from "../../features/auth/authAPI.js";
+import {
+  useAddEmployeeMutation,
+  useGetEmployeesByRoleQuery,
+  useGetEmployeesQuery,
+  useGetRolesQuery,
+} from "../../features/API/api.js";
 
 export const AddEmployee = ({ isOpen, onClose }) => {
   //
   const [roleList, setRoleList] = useState([]);
   const [role, setRole] = useState("");
 
-  const {data: rolesData, isLoading: rolesLoading} = useGetRolesQuery()
-  const {data: employeeData, isLoading: employeeLoading} = useGetEmployeesQuery({roleName : role})
-  const [addEmployee, { isLoading: addEmployeeLoading, error, isSuccess}] = useAddEmployeeMutation()
+  const { data: rolesData, isLoading: rolesLoading } = useGetRolesQuery();
+  const { data: employeeData, isLoading: employeeLoading } =
+    useGetEmployeesQuery({ roleName: role });
+  const [addEmployee, { isLoading: addEmployeeLoading, error, isSuccess }] =
+    useAddEmployeeMutation();
   const [form, setForm] = useState({
     employeeName: "",
     employeeRole: "",
     employeeEmail: "",
     phoneNumber: "",
     reportingPerson: "",
-    
   });
 
   function onChange(e) {
@@ -69,14 +75,13 @@ export const AddEmployee = ({ isOpen, onClose }) => {
     e.preventDefault();
     const postApi = async () => {
       try {
-        const response = await addEmployee(form).unwrap()
+        const response = await addEmployee(form).unwrap();
         onClose();
       } catch (error) {
         console.log(error);
       }
     };
     postApi();
-    
   }
 
   return (
@@ -86,11 +91,11 @@ export const AddEmployee = ({ isOpen, onClose }) => {
         className={styles.whiteBackground}
         onSubmit={handleSubmit}
       >
-        <div className= {styles.formText}>
+        <div className={styles.formText}>
           <h1>Add Employee</h1>
-          <CrossButton onClick={()=>onClose()}/>
+          <CrossButton onClick={() => onClose()} />
         </div>
-        
+
         <div className={styles.formBox}>
           <PlainInputField
             onChange={onChange}
@@ -100,7 +105,6 @@ export const AddEmployee = ({ isOpen, onClose }) => {
             label="Employee Name*"
             required={true}
           />
-
 
           <PlainInputField
             onChange={onChange}
@@ -131,9 +135,7 @@ export const AddEmployee = ({ isOpen, onClose }) => {
           <Dropdown
             name={"roleName"}
             label={"Select Reporting Role"}
-            onChange={(e) =>
-              setRole(e.target.value)
-            }
+            onChange={(e) => setRole(e.target.value)}
             value={role}
             options={rolesData?.data || []}
           />

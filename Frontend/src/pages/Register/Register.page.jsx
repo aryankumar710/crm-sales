@@ -3,19 +3,16 @@ import styles from "./Register.page.module.css";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setEmployee } from "../../features/auth/authSlice.js";
+import { setEmployee } from "../../features/API/slice.js";
 import { PlainInputField } from "../../components/inputFields/PlainInputfield.jsx";
 import { PhoneInputField } from "../../components/InputFields/PhoneInputField.jsx";
 import { PasswordInputField } from "../../components/InputFields/PasswordInputField.jsx";
 import { FileInputField } from "../../components/InputFields/FileInputField.jsx";
 import { PrimaryButton } from "../../components/Buttons/PrimaryButton.component.jsx";
-import {
-  useGetMeQuery,
-  useRegisterMutation,
-} from "../../features/auth/authAPI.js";
+import { useGetMeQuery, useRegisterMutation } from "../../features/API/api.js";
 
 export const Registration = () => {
-  const [register, { data, isLoading, error, isSuccess }] =
+  const [register, { isLoading, error, isSuccess }] =
     useRegisterMutation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -65,11 +62,9 @@ export const Registration = () => {
     // dispatch(registerOrganisation(data));
 
     try {
-      
       const res = await register(data).unwrap();
 
       dispatch(setEmployee(res.data));
- 
 
       navigate("/adminDashboard");
     } catch (e) {

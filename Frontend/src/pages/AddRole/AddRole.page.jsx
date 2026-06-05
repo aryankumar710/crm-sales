@@ -3,7 +3,7 @@ import { Modal } from "../../components/Modals/Modal.component";
 import {
   useCreateRoleMutation,
   useGetRolesQuery,
-} from "../../features/auth/authAPI";
+} from "../../features/API/api.js";
 import { PrimaryButton } from "../../components/Buttons/PrimaryButton.component.jsx";
 import { PlainInputField } from "../../components/inputFields/PlainInputfield.jsx";
 import { Dropdown } from "../../components/InputFields/Dropdown.component.jsx";

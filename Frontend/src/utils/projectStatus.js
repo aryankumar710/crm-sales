@@ -3,30 +3,26 @@
 export const projectStatus = [
     {
         id: 1,
-        status: prospect
+        status: "Prospect"
     }, 
         {
         id: 2,
-        status: suspect
+        status: "Suspect"
+    },  
+        {
+        id: 3,
+        status: "Demo"
     }, 
         {
-        id: 1,
-        status: prospect
+        id: 4,
+        status: "Proposal"
     }, 
         {
-        id: 1,
-        status: prospect
+        id: 5,
+        status: "Negotiation"
     }, 
         {
-        id: 1,
-        status: prospect
-    }, 
-        {
-        id: 1,
-        status: prospect
-    }, 
-        {
-        id: 1,
-        status: prospect
+        id: 6,
+        status: "Decision"
     }, 
 ]

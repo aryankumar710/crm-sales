@@ -1,17 +1,17 @@
 import { useState } from "react";
-import { useLoginMutation } from "../../features/auth/authAPI.js";
+import { useLoginMutation } from "../../features/API/api.js";
 import { useDispatch } from "react-redux";
-import { setEmployee } from "../../features/auth/authSlice.js";
+import { setEmployee } from "../../features/API/slice.js";
 import { PasswordInputField } from "../../components/InputFields/PasswordInputField.jsx";
 import { useNavigate } from "react-router-dom";
-import styles from "../Login/Login.page.module.css"
+import styles from "../Login/Login.page.module.css";
 import { PrimaryButton } from "../../components/Buttons/PrimaryButton.component.jsx";
 import { PlainInputField } from "../../components/inputFields/PlainInputfield.jsx";
 import { LoginRegisterBanner } from "../../components/LoginRegistration/LoginRegisterBanner.component.jsx";
 
 export const Login = () => {
   const [form, setForm] = useState({ employeeEmail: "", password: "" });
-  const [login, { data, isLoading, isSuccess, error }] = useLoginMutation();
+  const [login, { isLoading, isSuccess, error }] = useLoginMutation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -20,12 +20,17 @@ export const Login = () => {
   }
 
   async function handleSubmit(e) {
-     e.preventDefault();
+    e.preventDefault();
     try {
       const res = await login(form).unwrap();
-      dispatch(setEmployee(res.data));
-      navigate("/adminDashboard")
-
+      dispatch(setEmployee(res?.data));
+      console.log(res?.data)
+      if(res?.data?.loggedInEmployee.role.roleType === "HR Admin"){
+        navigate("/adminDashboard");
+      }else{
+        navigate("/employeeDashboard")
+      }
+      
     } catch (error) {
       console.log(error);
     }

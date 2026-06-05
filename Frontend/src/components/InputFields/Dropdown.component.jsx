@@ -13,9 +13,7 @@ export const Dropdown = ({ name, label, value, options, onChange}) => {
               {opt[name]}
             </option>
           ))}
-          <div>
-            
-          </div>
+ 
         </select>
       </div>
     </>

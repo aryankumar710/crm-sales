@@ -1,20 +1,40 @@
-import { Leads } from "../models/leads.model"
+import { Leads } from "../models/leads.model.js";
+import { APIError } from "../utils/APIerror.js";
 
+export const createLeads = async ({
+  assignedTo,
+  clientName,
+  projectInfo,
+  status,
+  source,
+  email,
+  phoneNumber,
+  dealValue,
+}) => {
+  const existingClient = await Leads.findOne({ clientName: clientName });
 
-const createLeads = async({employeeID, clientName, projectInfo, status, source}) => {
-    const existingClient = Leads.findOne({clientName: clientName})
+  console.log(existingClient)
 
-    if(existingClient){
-        throw new APIError(409, "This client already exists")
-    }
+  if (existingClient) {
+    throw new APIError(409, "This client already exists");
+  }
 
-    const newLead = await Leads.create({
-        employeeID: employeeID,
-        clientName: clientName,
-        projectInfo: projectInfo,
-        status: status,
-        source: source
-    })
+  const newLead = await Leads.create({
+    assignedTo: assignedTo,
+    clientName: clientName,
+    projectInfo: projectInfo,
+    status: status,
+    source: source,
+    email: email,
+    phoneNumber: phoneNumber,
+    dealValue: dealValue,
+  });
 
-    return newLead
-}
+  console.log(newLead);
+
+  if(!newLead){
+    throw new APIError(409, "Error while creating lead")
+  }
+
+  return newLead;
+};

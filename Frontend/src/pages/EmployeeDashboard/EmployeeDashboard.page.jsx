@@ -1,14 +1,19 @@
 import { AnalysisCard } from "../../components/AnalysisCard/AnalysisCard.component.jsx";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import { setEmployee } from "../../features/API/slice.js";
 import styles from "../EmployeeDashboard/EmployeeDashboard.page.module.css";
 import Typography from "@mui/material/Typography";
 import Slider from "@mui/material/Slider";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import { BarChart } from "@mui/x-charts/BarChart";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import { PrimaryButton } from "../../components/Buttons/PrimaryButton.component.jsx";
+import { useGetMeQuery } from "../../features/API/API.js";
+import { AddLeads } from "../AddLeads/AddLeads.page.jsx";
+import { TertiaryButton } from "../../components/Buttons/TertiaryButton.component.jsx";
 
 //import { populationByEducationLevelPercentageSeries } from './populationByEducationLevel';
 
@@ -18,6 +23,15 @@ export const EmployeeDashboard = () => {
   const [itemNb, setItemNb] = useState(12);
   const [skipAnimation, setSkipAnimation] = useState(false);
   const [isOpen, setOpen] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { data, isLoading } = useGetMeQuery();
+
+    useEffect(() => {
+      if (data) {
+        dispatch(setEmployee(data?.data));
+      }
+    }, [data]);
 
   const handleItemNbChange = (event, newValue) => {
     if (typeof newValue !== "number") {
@@ -35,11 +49,16 @@ export const EmployeeDashboard = () => {
   function handleModal() {
     if (isOpen) {
       setOpen(false);
-      navigate("/adminDashboard");
+      navigate("/employeeDashboard");
     } else {
       setOpen(true);
-      navigate("/adminDashboard/addEmployee");
+      navigate("/employeeDashboard/addLead");
     }
+  }
+
+    function handleClose() {
+    setOpen(false);
+    navigate("/employeeDashboard");
   }
   return (
     <>
@@ -254,6 +273,7 @@ export const EmployeeDashboard = () => {
                   />
                 </svg>
               </PrimaryButton>
+              
             </div>
           </section>
 
@@ -264,6 +284,9 @@ export const EmployeeDashboard = () => {
           </section>
         </div>
       </div>
+
+      <AddLeads isOpen={isOpen} onClose={handleClose}/>
+      
     </>
   );
 };

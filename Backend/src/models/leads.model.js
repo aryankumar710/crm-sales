@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 const LeadsSchema = mongoose.Schema(
   {
@@ -26,6 +26,27 @@ const LeadsSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+
+    phoneNumber: {
+      type: String,
+      trim: true,
+      minlength: 10,
+      maxlength: 10,
+      match: [/^\d{10}$/, "Please enter a valid 10-digit phone number"],
+    },
+
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+    },
+
+    dealValue: {
+      type: String,
+      required: true,
+    }
   },
   { timestamps: true }
 );

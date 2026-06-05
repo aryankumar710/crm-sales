@@ -6,9 +6,9 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   useGetTokenQuery,
   useUpdateSuperAdminMutation,
-} from "../../features/auth/authAPI.js";
+} from "../../features/API/api.js";
 import { useState, useEffect } from "react";
-import { setEmployee } from "../../features/auth/authSlice.js";
+import { setEmployee } from "../../features/API/slice.js";
 import { useDispatch } from "react-redux";
 import { PrimaryButton } from "../../components/Buttons/PrimaryButton.component.jsx";
 
@@ -22,7 +22,6 @@ export const SetPassword = () => {
     { skip: !token },
   );
 
-
   const [updateSuperAdmin, { isLoading }] = useUpdateSuperAdminMutation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -35,13 +34,13 @@ export const SetPassword = () => {
   });
 
   useEffect(() => {
-  if (getToken?.employeeEmail) {
-    setForm({
-      ...form,
-      employeeEmail: getToken.employeeEmail,
-    });
-  }
-}, [getToken]);
+    if (getToken?.employeeEmail) {
+      setForm({
+        ...form,
+        employeeEmail: getToken.employeeEmail,
+      });
+    }
+  }, [getToken]);
 
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -51,9 +50,8 @@ export const SetPassword = () => {
     e.preventDefault();
 
     try {
-     
       const res = await updateSuperAdmin(form).unwrap();
-      console.log(res)
+      console.log(res);
       dispatch(setEmployee(res?.data));
       navigate("/employeeDashboard");
     } catch (error) {

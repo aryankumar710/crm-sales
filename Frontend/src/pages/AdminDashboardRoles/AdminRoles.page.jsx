@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import {
   useGetEmployeesQuery,
   useGetRolesQuery,
-} from "../../features/auth/authAPI";
+} from "../../features/API/api.js";
 import { Table } from "../../components/Table/Table.component.jsx";
 import { AddRole } from "../AddRole/AddRole.page";
 import { useNavigate } from "react-router-dom";
@@ -19,7 +19,7 @@ export const AdminRoles = () => {
   const [selectedRole, setSelectedRole] = useState("");
   const tabRef = useRef(null);
   const [showTab, setShowTab] = useState(false);
-  
+
   const activeRole = selectedRole || getRoles?.data[0]?.roleName;
   const { data: getEmployeesData, isLoading: getEmployeesDataLoading } =
     useGetEmployeesQuery(
@@ -50,7 +50,6 @@ export const AdminRoles = () => {
       setShowTab(e.scrollWidth > e.clientWidth);
     }
   }, [getRoles]);
-
 
   return (
     <>
@@ -109,7 +108,9 @@ export const AdminRoles = () => {
                         ? styles.active
                         : ""
                     }`}
-                    onClick={()=> {setSelectedRole(role.roleName),setPage(1); }}
+                    onClick={() => {
+                      (setSelectedRole(role.roleName), setPage(1));
+                    }}
                   >
                     <span>{role.roleName}</span>
                   </button>

@@ -7,14 +7,14 @@
 
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-export const authApi = createApi({
-  reducerPath: "authApi",
+export const api = createApi({
+  reducerPath: "api",
   baseQuery: fetchBaseQuery({
     baseUrl: "/api/v1",
     credentials: "include",
   }),
 
-  tagTypes: ["Employees", "Roles"],
+  tagTypes: ["Employees", "Roles", "Leads"],
 
   endpoints: (builder) => ({
     register: builder.mutation({
@@ -88,8 +88,20 @@ export const authApi = createApi({
         method: "PATCH",
         body: data
       })
-    })
+    }),
+
+    addLead: builder.mutation({
+    query: (data) => ({
+      url: "/addLead",
+      method: 'POST',
+      body: data
+    }),
+    invalidatesTags: ["Leads"]
   }),
+
+
+
+  }),  
 });
 
 export const {
@@ -103,4 +115,5 @@ export const {
   useCreateRoleMutation,
   useGetTokenQuery,
   useUpdateSuperAdminMutation,
-} = authApi;
+  useAddLeadMutation
+} = api;

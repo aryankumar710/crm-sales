@@ -1,9 +1,9 @@
 import { NavLink } from "react-router-dom";
 import styles from "../Header/Header.component.module.css";
 import { useSelector, useDispatch } from "react-redux";
-import { useGetMeQuery } from "../../features/auth/authAPI.js";
+import { useGetMeQuery } from "../../features/API/api.js";
 import { useEffect } from "react";
-import { setEmployee } from "../../features/auth/authSlice.js";
+import { setEmployee } from "../../features/API/slice.js";
 
 export const Header = () => {
   const dispatch = useDispatch();
