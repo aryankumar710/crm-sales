@@ -1,0 +1,28 @@
+.headingAlignment {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+}
+
+.headingAndSubheading {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 0.5rem;
+}
+
+.headingAndSubheading h1 {
+  color: var(--primary-font-color);
+  font-size: 1.75rem;
+  font-weight: 500;
+}
+
+.headingAndSubheading p {
+    color: var(--tertiary-font-color);
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.buttonWidth{
+    width: 25%;
+}

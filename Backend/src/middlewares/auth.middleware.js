@@ -18,11 +18,14 @@ export const verifyJWT = async (req, res, next) => {
       .populate("role")
       .select("-password -refreshToken");
 
+      console.log(employee)
+
     if (!employee) {
       throw new APIError(401, "Invalid Access Token");
     }
 
     req.context = {
+      roleType: employee.role.roleType,
       employeeID: employee._id,
       organisationID: employee.organisationID
     } 

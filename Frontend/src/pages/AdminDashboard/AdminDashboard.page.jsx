@@ -20,17 +20,17 @@ export const AdminDashboard = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const employee = useSelector((state) => state.auth.employee);
-  const { data, isLoading } = useGetMeQuery();
+ // const { data, isLoading } = useGetMeQuery();
   const [page, setPage] = useState(1);
   const limit = 10;
   const { data: getEmployeesData, isLoading: getEmployeesDataLoading } =
     useGetEmployeesQuery({ page, limit });
 
-  useEffect(() => {
-    if (data) {
-      dispatch(setEmployee(data?.data));
-    }
-  }, [data]);
+  // useEffect(() => {
+  //   if (data) {
+  //     dispatch(setEmployee(data?.data));
+  //   }
+  // }, [data]);
 
   const [isOpen, setOpen] = useState(false);
 

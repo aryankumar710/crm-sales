@@ -99,6 +99,11 @@ const employeeData = async (req, res) => {
     const limit = Number(req.query.limit) || 10;
     const skip = (page - 1) * limit;
     const organisationID = req.context.organisationID;
+    const roleType = req.context.roleType
+    
+    if(roleType!== "HR Admin"){
+      throw new APIError(409, "Invalid Access")
+    }
     let totalEmployees = await Employee.countDocuments({
       organisationID: organisationID,
     });
@@ -132,7 +137,7 @@ const employeeData = async (req, res) => {
         .sort({ createdAt: -1 })
         .lean();
 
-      if (!getList) {
+      if (getList.length===0) {
         throw new APIError(409, "Employee List not fetched");
       }
     } else {

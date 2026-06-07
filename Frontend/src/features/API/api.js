@@ -99,6 +99,14 @@ export const api = createApi({
     invalidatesTags: ["Leads"]
   }),
 
+  getLeads: builder.query({
+    query: ({page, limit}) => ({
+      url: "/leads",
+      params: {page, limit}
+    }),
+    providesTags: ["Leads"]
+  })
+
 
 
   }),  

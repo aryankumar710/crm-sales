@@ -21,3 +21,8 @@
   gap: 0.5rem;
   align-items: center;
 }
+
+
+.unActive {
+display: none;
+}

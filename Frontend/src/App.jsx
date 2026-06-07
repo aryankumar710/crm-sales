@@ -16,6 +16,7 @@ import { AdminRoles } from "./pages/AdminDashboardRoles/AdminRoles.page.jsx";
 import { EmployeeDashboard } from "./pages/EmployeeDashboard/EmployeeDashboard.page.jsx";
 import { SetPassword } from "./pages/SetPassword/SetPassword.page.jsx";
 import { AddLeads } from "./pages/AddLeads/AddLeads.page.jsx";
+import { Leads } from "./pages/Leads/Leads.page.jsx";
 
 function App() {
   const router = createBrowserRouter([
@@ -44,19 +45,20 @@ function App() {
       element: <VerticalLayout />,
       children: [{ path: "", element: <AdminRoles /> }],
     },
-{
-  path: "/employeeDashboard",
-  element: <VerticalLayout />,
-  children: [
-    { path: "", element: <EmployeeDashboard /> },
-    {path: "addLead", element: <EmployeeDashboard />}
-  ],
-},
-// {
-//   path: "/employeeDashboard/addLead",
-//   element: <VerticalLayout />,
-//       children: [{ path: "", element: <EmployeeDashboard/>}],
-// },
+    {
+      path: "/employeeDashboard",
+      element: <VerticalLayout />,
+      children: [
+        { path: "", element: <EmployeeDashboard /> },
+        { path: "addLead", element: <EmployeeDashboard /> },
+      ],
+    },
+    {
+      path: "/leads",
+      element: <VerticalLayout/>,
+      children: [{path: "", element: <Leads/>}]
+    },
+
     {
       path: "/login",
       element: <Login />,

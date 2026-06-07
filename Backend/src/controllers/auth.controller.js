@@ -462,7 +462,7 @@ const getMe = async (req, res) => {
   try {
     const loggedInEmployee = await Employee.findById(
       req.context.employeeID
-    ).select("-password -refreshToken");
+    ).populate("role").select("-password -refreshToken");
     const loggedInOrganisation = await Organisation.findById(
       req.context.organisationID
     );
