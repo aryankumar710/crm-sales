@@ -460,9 +460,7 @@ const logout = async (req, res) => {
 
 const getMe = async (req, res) => {
   try {
-    const loggedInEmployee = await Employee.findById(
-      req.context.employeeID
-    ).populate("role").select("-password -refreshToken");
+    const loggedInEmployee = req.context.employee
     const loggedInOrganisation = await Organisation.findById(
       req.context.organisationID
     );

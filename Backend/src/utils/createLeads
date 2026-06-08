@@ -13,7 +13,6 @@ export const createLeads = async ({
 }) => {
   const existingClient = await Leads.findOne({ clientName: clientName });
 
-  console.log(existingClient)
 
   if (existingClient) {
     throw new APIError(409, "This client already exists");

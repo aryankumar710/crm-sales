@@ -56,7 +56,9 @@ function App() {
     {
       path: "/leads",
       element: <VerticalLayout/>,
-      children: [{path: "", element: <Leads/>}]
+      children: [{path: "", element: <Leads/>},
+        {path: "addLead", element: <Leads/>}
+      ]
     },
 
     {

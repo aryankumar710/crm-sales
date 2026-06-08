@@ -1,41 +1,77 @@
+import { useState } from "react";
 import { PrimaryButton } from "../../components/Buttons/PrimaryButton.component.jsx";
 import { LeadsTable } from "../../components/Table/LeadsTable.component.jsx";
-import styles from "../Leads/Leads.page.module.css"
+import { AddLeads } from "../AddLeads/AddLeads.page.jsx";
+import { useGetLeadsQuery } from "../../features/API/api.js";
+import styles from "../Leads/Leads.page.module.css";
 
 export const Leads = () => {
+  const [page, setPage] = useState(1);
+  const limit = 11;
+  const [isOpen, setOpen] = useState(false);
+  const { data: leadsData, isLoading } = useGetLeadsQuery({ page, limit });
+  console.log(leadsData);
+
+  function handlePageSelectionLeft() {
+    setPage((prev) => prev - 1);
+  }
+
+  function handlePageSelectionRight() {
+    setPage((prev) => prev + 1);
+  }
+
+  function handleModal() {
+    if (isOpen) {
+      setOpen(false);
+      navigate("/leads");
+    } else {
+      setOpen(true);
+      navigate("/leads/addLead");
+    }
+  }
+
+  function handleClose() {
+    setOpen(false);
+    navigate("/leads");
+  }
   return (
     <>
       <section className="glassEffect">
         <div className="subSection">
-        <div className={styles.headingAlignment}>
-          <div className={styles.headingAndSubheading}>
-            <h1>All Leads</h1>
-            <p>Manage and track leads and close the deal</p>
+          <div className={styles.headingAlignment}>
+            <div className={styles.headingAndSubheading}>
+              <h1>All Leads</h1>
+              <p>Manage and track leads and close the deal</p>
+            </div>
+            <div className={styles.buttonWidth}>
+              <PrimaryButton text={"New Lead"} onClick={handleModal}>
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M11 13H6C5.71667 13 5.47934 12.904 5.288 12.712C5.09667 12.52 5.00067 12.2827 5 12C4.99934 11.7173 5.09534 11.48 5.288 11.288C5.48067 11.096 5.718 11 6 11H11V6C11 5.71667 11.096 5.47934 11.288 5.288C11.48 5.09667 11.7173 5.00067 12 5C12.2827 4.99934 12.5203 5.09534 12.713 5.288C12.9057 5.48067 13.0013 5.718 13 6V11H18C18.2833 11 18.521 11.096 18.713 11.288C18.905 11.48 19.0007 11.7173 19 12C18.9993 12.2827 18.9033 12.5203 18.712 12.713C18.5207 12.9057 18.2833 13.0013 18 13H13V18C13 18.2833 12.904 18.521 12.712 18.713C12.52 18.905 12.2827 19.0007 12 19C11.7173 18.9993 11.48 18.9033 11.288 18.712C11.096 18.5207 11 18.2833 11 18V13Z"
+                    fill="#292929"
+                  />
+                </svg>
+              </PrimaryButton>
+            </div>
           </div>
-          <div className={styles.buttonWidth}>
-          <PrimaryButton text={"New Lead"} >
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M11 13H6C5.71667 13 5.47934 12.904 5.288 12.712C5.09667 12.52 5.00067 12.2827 5 12C4.99934 11.7173 5.09534 11.48 5.288 11.288C5.48067 11.096 5.718 11 6 11H11V6C11 5.71667 11.096 5.47934 11.288 5.288C11.48 5.09667 11.7173 5.00067 12 5C12.2827 4.99934 12.5203 5.09534 12.713 5.288C12.9057 5.48067 13.0013 5.718 13 6V11H18C18.2833 11 18.521 11.096 18.713 11.288C18.905 11.48 19.0007 11.7173 19 12C18.9993 12.2827 18.9033 12.5203 18.712 12.713C18.5207 12.9057 18.2833 13.0013 18 13H13V18C13 18.2833 12.904 18.521 12.712 18.713C12.52 18.905 12.2827 19.0007 12 19C11.7173 18.9993 11.48 18.9033 11.288 18.712C11.096 18.5207 11 18.2833 11 18V13Z"
-                fill="#292929"
-              />
-            </svg>
-          </PrimaryButton>
-          </div>
-
-        </div>
         </div>
 
         <div className="subSection background">
-          <LeadsTable/>
+          <LeadsTable
+            data={leadsData?.data}
+            page={page}
+            pageSelectionLeft={handlePageSelectionLeft}
+            pageSelectionRight={handlePageSelectionRight}
+          />
         </div>
       </section>
+      <AddLeads isOpen={isOpen} onClose={handleClose} />
     </>
   );
 };

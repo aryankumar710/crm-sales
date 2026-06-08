@@ -2,3 +2,12 @@
   background-color: var(--surface);
   padding: 0.875rem 1.5rem;
 }
+
+.pagination{
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  gap: 0.5rem; 
+  padding: 0.875rem 1.5rem;
+  padding-bottom: 0;
+}

@@ -66,45 +66,53 @@ const getLeads = async (req, res) => {
   try {
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 10;
+  
     const skip = (page - 1) * limit;
     const employeeID = req.context.employeeID;
-    Employee.aggregate([
-      {
-        $match: {
-          _id: employeeID,
-        },
-      },
-      {
-        $graphLookup: {
-          from: "employees",
-          startWith: "$_id",
-          connectFromField: "_id",
-          connectToField: "reportingTo",
-          depthField: "level",
-          as: "subordinates",
-        },
-      },
-    ]);
+    
+   const [employee] = await Employee.aggregate([
+  {
+    $match: {
+      _id: employeeID,
+    },
+  },
+  {
+    $graphLookup: {
+      from: "employees",
+      startWith: "$_id",
+      connectFromField: "_id",
+      connectToField: "reportingTo",
+      depthField: "level",
+      as: "subordinates",
+    },
+  },
+]);
 
-    const accessibleUsers = [employeeID, ...subordinates.map((emp) => emp._id)];
 
-    if (accessibleUsers.length === 0) {
-      throw new APIError(409, "Accessible user not found");
-    }
 
-    const leads = await Lead.find({
-      assignedTo: { $in: accessibleUsers },
-    })
-      .skip(skip)
-      .limit(limit)
-      .sort({ createdAt: -1 })
-      .lean();
 
-    const leadsItem = leads.length;
 
-    if (leadsItem === 0) {
-      throw new APIError(409, "No leads available");
-    }
+if (!employee) {
+  throw new APIError(404, "Employee not found");
+}
+
+const accessibleUsers = [
+  employeeID,
+  ...employee.subordinates.map((emp) => emp._id),
+];
+
+
+
+const totalLeads = await Leads.countDocuments({
+  assignedTo: { $in: accessibleUsers },
+});
+
+const leads = await Leads.find({
+  assignedTo: { $in: accessibleUsers },
+})
+  
+
+  console.log(leads)
 
     res
       .status(200)
@@ -116,7 +124,7 @@ const getLeads = async (req, res) => {
             pagination: {
               page,
               limit,
-              totalPages: Math.ceil(leadsItem / limit),
+              totalPages: Math.ceil(totalLeads / limit),
             },
           },
           "Leads fetched"

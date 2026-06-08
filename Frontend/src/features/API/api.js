@@ -101,7 +101,7 @@ export const api = createApi({
 
   getLeads: builder.query({
     query: ({page, limit}) => ({
-      url: "/leads",
+      url: "/getLeads",
       params: {page, limit}
     }),
     providesTags: ["Leads"]
@@ -123,5 +123,6 @@ export const {
   useCreateRoleMutation,
   useGetTokenQuery,
   useUpdateSuperAdminMutation,
-  useAddLeadMutation
+  useAddLeadMutation,
+  useGetLeadsQuery
 } = api;

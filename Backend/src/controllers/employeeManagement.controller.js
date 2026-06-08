@@ -15,7 +15,6 @@ const createNewEmployee = async (req, res) => {
       employeeEmail,
       phoneNumber,
       reportingPerson,
-     
     } = req.body;
 
     //    console.log(req.body)
@@ -27,7 +26,6 @@ const createNewEmployee = async (req, res) => {
         employeeEmail,
         phoneNumber,
         reportingPerson,
-        
       ].some((field) => {
         return field?.trim() === "";
       })
@@ -68,7 +66,7 @@ const createNewEmployee = async (req, res) => {
       role: employeeRoleId._id,
       reportingPerson: reportingPersonId._id,
       phoneNumber: phoneNumber,
-    
+
       invitationToken: generateInviteToken,
     });
 
@@ -99,16 +97,16 @@ const employeeData = async (req, res) => {
     const limit = Number(req.query.limit) || 10;
     const skip = (page - 1) * limit;
     const organisationID = req.context.organisationID;
-    const roleType = req.context.roleType
-    
-    if(roleType!== "HR Admin"){
-      throw new APIError(409, "Invalid Access")
+    const roleType = req.context.roleType;
+
+    if (roleType !== "HR Admin") {
+      throw new APIError(409, "Invalid Access");
     }
     let totalEmployees = await Employee.countDocuments({
       organisationID: organisationID,
     });
     let getList = "";
-    
+
     if (req.query.roleName) {
       const role = await Role.findOne({
         roleName: req.query.roleName,
@@ -123,10 +121,10 @@ const employeeData = async (req, res) => {
       }
 
       totalEmployees = await Employee.countDocuments({
-      organisationID: organisationID,
-      role: role._id
-    });
-    
+        organisationID: organisationID,
+        role: role._id,
+      });
+
       getList = await Employee.find({
         role: role._id,
         organisationID: organisationID,
@@ -137,7 +135,7 @@ const employeeData = async (req, res) => {
         .sort({ createdAt: -1 })
         .lean();
 
-      if (getList.length===0) {
+      if (getList.length === 0) {
         throw new APIError(409, "Employee List not fetched");
       }
     } else {
@@ -163,6 +161,51 @@ const employeeData = async (req, res) => {
         "Employee data fetched"
       )
     );
+  } catch (error) {
+    res.status(error.statusCode || 500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+const Team = async (req, res) => {
+  try {
+    const { roleName } = req.query;
+    const page = req.query.page || 1;
+    const limit = req.query.limit || 10;
+    const skip = (page - 1) * limit;
+    const employeeID = req.context.employeeID;
+    const [employee] = Employee.aggregate([
+      {
+        $match: {
+          _id: employeeID,
+        },
+      },
+      {
+        $graphLookup: {
+          from: "employees",
+          startWith: "$_id",
+          connectFromField: "_id",
+          connectToField: "reportingTo",
+          depthField: "level",
+          as: "subordinates",
+        },
+      },
+    ]);
+
+    const accessibleUsers = [
+      employeeID,
+      ...employee.subordinates.map((emp) => emp._id),
+    ];
+
+    if (!employee) {
+      throw new APIError(409, "No employees found");
+    }
+
+    const employees = await Leads.find({
+      _id: { $in: accessibleUsers },
+    });
   } catch (error) {
     res.status(error.statusCode || 500).json({
       success: false,
