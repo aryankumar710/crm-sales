@@ -1,0 +1,81 @@
+.box {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  background-color: var(--white);
+  gap: 2.5rem;
+}
+
+.horizontal {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+}
+
+.nameAndPosition {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.nameAndPosition h4 {
+  color: var(--primary-font-color);
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.nameAndPosition h6 {
+  color: var(--tertiary-font-color);
+  font-size: 0.75rem;
+  font-weight: 400;
+}
+
+.profile {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 0.375rem;
+}
+
+.profile h5 {
+  color: var(--tertiary-font-color);
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+
+.profile h6 {
+  color: var(--purple-font-color);
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.keyValue {
+  display: flex;
+  gap:0.75rem
+}
+
+.key{
+  color: var(--tertiary-font-color);
+  font-size: 0.875rem;
+  font-weight: 400;
+  width: 7.5rem;
+}
+
+.value{
+  color: var(--primary-font-color);
+  font-size: 0.875rem;
+  font-weight: 400;
+  width: 14.5rem;
+}
+
+.button{
+  display: flex;
+  justify-content: end;
+}

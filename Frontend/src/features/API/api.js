@@ -105,9 +105,11 @@ export const api = createApi({
       params: {page, limit}
     }),
     providesTags: ["Leads"]
-  })
+  }),
 
-
+    getTeam: builder.query({
+      query: () => "/teamData"
+    }),
 
   }),  
 });
@@ -124,5 +126,6 @@ export const {
   useGetTokenQuery,
   useUpdateSuperAdminMutation,
   useAddLeadMutation,
-  useGetLeadsQuery
+  useGetLeadsQuery,
+  useGetTeamQuery
 } = api;

@@ -17,6 +17,7 @@ import { EmployeeDashboard } from "./pages/EmployeeDashboard/EmployeeDashboard.p
 import { SetPassword } from "./pages/SetPassword/SetPassword.page.jsx";
 import { AddLeads } from "./pages/AddLeads/AddLeads.page.jsx";
 import { Leads } from "./pages/Leads/Leads.page.jsx";
+import { Team } from "./pages/Team/Team.page.jsx";
 
 function App() {
   const router = createBrowserRouter([
@@ -69,6 +70,11 @@ function App() {
       path: "/set-password",
       element: <SetPassword />,
     },
+    {
+      path: "/team",
+      element: <VerticalLayout/>,
+      children: [{path: "", element: <Team/>}]
+    }
   ]);
   return <RouterProvider router={router} />;
 }

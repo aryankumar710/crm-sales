@@ -22,3 +22,8 @@ input {
   outline: none;
   background: transparent;
 }
+
+.filterAlignment{
+  display: flex;
+  gap: 0.25rem
+}

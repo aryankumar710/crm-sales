@@ -1,7 +1,7 @@
 import { Leads } from "../models/leads.model.js";
 import { APIError } from "../utils/APIerror.js";
 import { APIResponse } from "../utils/APIresponse.js";
-import { createLeads } from "../utils/createLeads";
+import { createLeads } from "../utils/createLeads.js";
 import { Employee } from "../models/employee.model.js";
 
 const addLead = async (req, res) => {
@@ -34,7 +34,7 @@ const addLead = async (req, res) => {
     }
 
     const employeeID = req.context.employeeID;
-    console.log(employeeID);
+
 
     const leads = await createLeads({
       assignedTo: employeeID,
@@ -47,7 +47,6 @@ const addLead = async (req, res) => {
       dealValue: dealValue,
     });
 
-    console.log(leads);
 
     if (!leads) {
       throw new APIError(409, "Error while creating new lead");
@@ -66,70 +65,65 @@ const getLeads = async (req, res) => {
   try {
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 10;
-  
+
     const skip = (page - 1) * limit;
     const employeeID = req.context.employeeID;
+   
+
+    const [employee] = await Employee.aggregate([
+      {
+        $match: {
+          _id: employeeID,
+        },
+      },
+      {
+        $graphLookup: {
+          from: "employees",
+          startWith: "$_id",
+          connectFromField: "_id",
+          connectToField: "reportingTo",
+          depthField: "level",
+          as: "subordinates",
+        },
+      },
+    ]);
+
+    console.log(employee)
+
+    if (!employee) {
+      throw new APIError(404, "Employee not found");
+    }
+
+    const accessibleUsers = [
+      employeeID,
+      ...employee.subordinates.map((emp) => emp._id),
+    ];
     
-   const [employee] = await Employee.aggregate([
-  {
-    $match: {
-      _id: employeeID,
-    },
-  },
-  {
-    $graphLookup: {
-      from: "employees",
-      startWith: "$_id",
-      connectFromField: "_id",
-      connectToField: "reportingTo",
-      depthField: "level",
-      as: "subordinates",
-    },
-  },
-]);
 
+    const totalLeads = await Leads.countDocuments({
+      assignedTo: { $in: accessibleUsers },
+    });
 
+    const leads = await Leads.find({
+      assignedTo: { $in: accessibleUsers },
+    });
 
+    console.log(leads);
 
-
-if (!employee) {
-  throw new APIError(404, "Employee not found");
-}
-
-const accessibleUsers = [
-  employeeID,
-  ...employee.subordinates.map((emp) => emp._id),
-];
-
-
-
-const totalLeads = await Leads.countDocuments({
-  assignedTo: { $in: accessibleUsers },
-});
-
-const leads = await Leads.find({
-  assignedTo: { $in: accessibleUsers },
-})
-  
-
-  console.log(leads)
-
-    res
-      .status(200)
-      .json(
-        new APIResponse(
-          200,
-          {
-            leads,
-            pagination: {
-              page,
-              limit,
-              totalPages: Math.ceil(totalLeads / limit),
-            },
+    res.status(200).json(
+      new APIResponse(
+        200,
+        {
+          leads,
+          pagination: {
+            page,
+            limit,
+            totalPages: Math.ceil(totalLeads / limit),
           },
-          "Leads fetched"
-        )
-      );
+        },
+        "Leads fetched"
+      )
+    );
   } catch (error) {
     res.status(error.statusCode || 500).json({
       success: false,

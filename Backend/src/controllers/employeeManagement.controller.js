@@ -6,6 +6,7 @@ import { createEmployee } from "../utils/createEmployee.js";
 import crypto from "crypto";
 import { sendInviteEmail } from "../utils/invitationToken.js";
 import { Role } from "../models/roles.model.js";
+import { Leads } from "../models/leads.model.js";
 
 const createNewEmployee = async (req, res) => {
   try {
@@ -169,14 +170,16 @@ const employeeData = async (req, res) => {
   }
 };
 
-const Team = async (req, res) => {
+const getTeamData = async (req, res) => {
   try {
-    const { roleName } = req.query;
-    const page = req.query.page || 1;
-    const limit = req.query.limit || 10;
-    const skip = (page - 1) * limit;
+    // const { roleName } = req.query;
+    // const page = req.query.page || 1;
+    // const limit = req.query.limit || 10;
+    // const skip = (page - 1) * limit;
+    const organisationID = req.context.organisationID
     const employeeID = req.context.employeeID;
-    const [employee] = Employee.aggregate([
+    console.log(employeeID);
+    const [employee] = await Employee.aggregate([
       {
         $match: {
           _id: employeeID,
@@ -187,25 +190,63 @@ const Team = async (req, res) => {
           from: "employees",
           startWith: "$_id",
           connectFromField: "_id",
-          connectToField: "reportingTo",
+          connectToField: "reportingPerson",
           depthField: "level",
           as: "subordinates",
         },
       },
     ]);
 
-    const accessibleUsers = [
-      employeeID,
-      ...employee.subordinates.map((emp) => emp._id),
-    ];
+    console.log(employee);
 
     if (!employee) {
       throw new APIError(409, "No employees found");
     }
 
-    const employees = await Leads.find({
-      _id: { $in: accessibleUsers },
-    });
+    const accessibleUsers = [
+      employeeID,
+      ...employee.subordinates.map((emp) => emp._id),
+    ];
+
+    const dataSet = await Promise.all(
+      accessibleUsers.map(async (employeeID) => {
+
+        const employee = await Employee.find({organisationID: organisationID, _id: employeeID}).populate("role reportingPerson").select("-password -refreshToken")
+        const leads = await Leads.find({
+          assignedTo: employeeID,
+        })
+
+        const totalLead = await leads.length
+
+        const totalPipelineValue = await leads.reduce(
+          (sum, lead) => sum + Number(lead.dealValue),
+          0
+        );
+
+        const countWonLeads = await leads.filter(
+          (lead) => lead.status === "Decision (Won)"
+        ).length;
+
+        const countLostLeads = await leads.filter(
+          (lead) => lead.status === "Decision (Lost)"
+        ).length;
+
+        return {
+          employee,
+          leads,
+          totalLead,
+          totalPipelineValue,
+          countWonLeads,
+          countLostLeads,
+        };
+      })
+    );
+
+    console.log(dataSet);
+
+    res
+      .status(200)
+      .json(new APIResponse(200, dataSet, "Team fetched successfully"));
   } catch (error) {
     res.status(error.statusCode || 500).json({
       success: false,
@@ -214,4 +255,4 @@ const Team = async (req, res) => {
   }
 };
 
-export { createNewEmployee, employeeData };
+export { createNewEmployee, employeeData, getTeamData };

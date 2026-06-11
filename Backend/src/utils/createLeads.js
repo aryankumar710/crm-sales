@@ -1,5 +1,5 @@
 import { Leads } from "../models/leads.model.js";
-import { APIError } from "../utils/APIerror.js";
+import { APIError } from "./APIerror.js";
 
 export const createLeads = async ({
   assignedTo,

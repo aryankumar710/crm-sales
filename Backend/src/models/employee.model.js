@@ -9,6 +9,7 @@ const EmployeeSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Organisation",
     },
+    
     employeeName: {
       type: String,
       trim: true,
@@ -22,6 +23,7 @@ const EmployeeSchema = mongoose.Schema(
       lowercase: true,
       trim: true,
     },
+
     countryCode: {
       type: String,
       enum: ["+91", "+1", "+44"],

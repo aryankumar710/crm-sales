@@ -4,6 +4,7 @@
   --background-gradiant: linear-gradient(to right, #dcecfb, #e5e6f8);
   --white: #ffffff;
   --border-color: #e1e1e1;
+  --purple-font-color: #8A38F5;
   --tertiary-font-color: #777777;
   --secondary-font-color: #4f4f4f;
   --primary-font-color: #0b0b0b;
@@ -62,8 +63,6 @@ html {
 .background{
   background: var(--white);
 }
-
-
 
 section {
   display: flex;
