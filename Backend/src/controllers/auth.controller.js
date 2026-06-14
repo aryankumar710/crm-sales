@@ -274,7 +274,7 @@ const registerSuperAdmin = async (req, res) => {
     loggedInEmployee.phoneNumber = phoneNumber;
     loggedInEmployee.password = password;
 
-    console.log(loggedInEmployee)
+    console.log(loggedInEmployee);
 
     if (!loggedInEmployee) {
       throw new APIError(400, "Employee not found");
@@ -283,7 +283,7 @@ const registerSuperAdmin = async (req, res) => {
     const loggedInOrganisation = await Organisation.findById(
       loggedInEmployee?.organisationID
     );
-    console.log(loggedInOrganisation)
+    console.log(loggedInOrganisation);
 
     if (!loggedInOrganisation) {
       throw new APIError(400, "Organisation not found");
@@ -460,7 +460,7 @@ const logout = async (req, res) => {
 
 const getMe = async (req, res) => {
   try {
-    const loggedInEmployee = req.context.employee
+    const loggedInEmployee = req.context.employee;
     const loggedInOrganisation = await Organisation.findById(
       req.context.organisationID
     );

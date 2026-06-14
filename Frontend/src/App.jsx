@@ -18,6 +18,7 @@ import { SetPassword } from "./pages/SetPassword/SetPassword.page.jsx";
 import { AddLeads } from "./pages/AddLeads/AddLeads.page.jsx";
 import { Leads } from "./pages/Leads/Leads.page.jsx";
 import { Team } from "./pages/Team/Team.page.jsx";
+import { Profile } from "./pages/Profile/Profile.page.jsx";
 
 function App() {
   const router = createBrowserRouter([
@@ -74,6 +75,11 @@ function App() {
       path: "/team",
       element: <VerticalLayout/>,
       children: [{path: "", element: <Team/>}]
+    },
+    {
+      path: "/profile",
+      element: <VerticalLayout/>,
+      children: [{path: "", element: <Profile/>}]
     }
   ]);
   return <RouterProvider router={router} />;

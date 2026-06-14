@@ -22,11 +22,13 @@ export const Header = () => {
   return (
     <>
       <div className={styles.container}>
-        <img
-          className={styles.image}
-          src={employee?.loggedInOrganisation?.companyLogo}
-          alt=""
-        />
+        <div className={styles.companyBackgroundImage}>
+          <img
+            className={styles.image}
+            src={employee?.loggedInOrganisation?.companyLogo}
+            alt=""
+          />
+        </div>
 
         <nav
           className={`${employeeType === "HR Admin" ? styles.navigation : styles.unActive}`}
@@ -161,7 +163,13 @@ export const Header = () => {
           </NavLink>
         </nav>
 
-        <img className={styles.image} src=" " alt="" />
+        <div className={styles.companyBackgroundImage}>
+          <img
+            className={styles.image}
+            src="ix_user-profile-filled.png"
+            alt=""
+          />
+        </div>
       </div>
     </>
   );

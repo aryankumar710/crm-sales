@@ -1,0 +1,25 @@
+.heading{
+    font-size: 1.75rem;
+    font-weight: 500;
+    color: var(--primary-font-color);
+}
+
+.box {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  background-color: var(--white);
+  gap: 2.5rem;
+}
+
+.horizontal {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+}
+
+.verticle{
+    display: flex;
+    flex-direction: column;
+}

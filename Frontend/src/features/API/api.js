@@ -86,32 +86,35 @@ export const api = createApi({
       query: (data) => ({
         url: "/setPassword",
         method: "PATCH",
-        body: data
-      })
+        body: data,
+      }),
     }),
 
     addLead: builder.mutation({
-    query: (data) => ({
-      url: "/addLead",
-      method: 'POST',
-      body: data
+      query: (data) => ({
+        url: "/addLead",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Leads"],
     }),
-    invalidatesTags: ["Leads"]
-  }),
 
-  getLeads: builder.query({
-    query: ({page, limit}) => ({
-      url: "/getLeads",
-      params: {page, limit}
+    getLeads: builder.query({
+      query: ({ page, limit }) => ({
+        url: "/getLeads",
+        params: { page, limit },
+      }),
+      providesTags: ["Leads"],
     }),
-    providesTags: ["Leads"]
-  }),
 
     getTeam: builder.query({
       query: () => "/teamData"
     }),
 
-  }),  
+    getProfile : builder.query({
+      query: () => "/profileData"
+    })
+  }),
 });
 
 export const {
@@ -127,5 +130,6 @@ export const {
   useUpdateSuperAdminMutation,
   useAddLeadMutation,
   useGetLeadsQuery,
-  useGetTeamQuery
+  useGetTeamQuery,
+  useGetProfileQuery
 } = api;

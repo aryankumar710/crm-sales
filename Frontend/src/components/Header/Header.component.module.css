@@ -22,7 +22,14 @@
   align-items: center;
 }
 
-
 .unActive {
-display: none;
+  display: none;
+}
+
+.companyBackgroundImage{
+  background-image: url("public/ix_user-profile-filled.png");
+    background-size: cover; /* or contain */
+  background-repeat: no-repeat;
+  height: 44px;
+  width: 44px;
 }

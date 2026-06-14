@@ -1,21 +1,21 @@
 import { useState } from "react";
 import { FilterDropdown } from "../../components/InputFields/FilterDropdown.component";
 import { TeamMembersCard } from "../../components/TeamMembersCard/TeamMembersCard.component";
-import {  useGetTeamQuery } from "../../features/API/api.js";
-import styles from "../Team/Team.page.module.css"
+import { useGetTeamQuery } from "../../features/API/api.js";
+import styles from "../Team/Team.page.module.css";
 
 export const Team = () => {
-// const limit = 10;
-// const [page, setPage] = useState(1)
-  const {data: getLeads, isLoading} = useGetTeamQuery()
-  console.log(getLeads)
-  console.log(isLoading)
+  // const limit = 10;
+  // const [page, setPage] = useState(1)
+  const { data: getLeads, isLoading } = useGetTeamQuery();
+  console.log(getLeads);
+  console.log(isLoading);
   return (
     <>
       <section className="glassEffect">
+        <h1 className={styles.heading}>Team Overview</h1>
         
-          <h1 className={styles.heading}>Team Overview</h1>
-          {/* <div>
+        {/* <div>
             <FilterDropdown>
               <svg
                 width="20"
@@ -32,14 +32,9 @@ export const Team = () => {
             </FilterDropdown>
           </div> */}
 
-          {getLeads?.data?.map((leadsData)=>{
-            return(
-              <TeamMembersCard data={leadsData}/>
-            )
-          })}
-          
- 
-      
+        {getLeads?.data?.map((leadsData) => {
+          return <TeamMembersCard data={leadsData} />;
+        })}
       </section>
     </>
   );

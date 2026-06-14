@@ -172,14 +172,10 @@ const employeeData = async (req, res) => {
 
 const getTeamData = async (req, res) => {
   try {
-    // const { roleName } = req.query;
-    // const page = req.query.page || 1;
-    // const limit = req.query.limit || 10;
-    // const skip = (page - 1) * limit;
-    const organisationID = req.context.organisationID
+    const organisationID = req.context.organisationID;
     const employeeID = req.context.employeeID;
     console.log(employeeID);
-    const [employee] = await Employee.aggregate([
+    const [employees] = await Employee.aggregate([
       {
         $match: {
           _id: employeeID,
@@ -197,56 +193,174 @@ const getTeamData = async (req, res) => {
       },
     ]);
 
-    console.log(employee);
+    console.log(employees);
 
-    if (!employee) {
+    if (!employees) {
       throw new APIError(409, "No employees found");
     }
 
     const accessibleUsers = [
       employeeID,
-      ...employee.subordinates.map((emp) => emp._id),
+      ...employees.subordinates.map((emp) => emp._id),
     ];
 
-    const dataSet = await Promise.all(
-      accessibleUsers.map(async (employeeID) => {
+    const fetchEmployees = await Employee.find({
+      _id: { $in: accessibleUsers },
+    })
+      .populate("role reportingPerson")
+      .select("-password -refreshToken");
 
-        const employee = await Employee.find({organisationID: organisationID, _id: employeeID}).populate("role reportingPerson").select("-password -refreshToken")
-        const leads = await Leads.find({
-          assignedTo: employeeID,
-        })
+    // console.log(fetchEmployees)
 
-        const totalLead = await leads.length
+    const fetchLeads = await Leads.find({
+      assignedTo: {
+        $in: accessibleUsers,
+      },
+    });
 
-        const totalPipelineValue = await leads.reduce(
-          (sum, lead) => sum + Number(lead.dealValue),
-          0
-        );
+    // console.log(fetchLeads)
 
-        const countWonLeads = await leads.filter(
-          (lead) => lead.status === "Decision (Won)"
-        ).length;
+    const dataSet = {};
 
-        const countLostLeads = await leads.filter(
-          (lead) => lead.status === "Decision (Lost)"
-        ).length;
+    fetchEmployees.forEach((emp) => {
+      dataSet[emp._id.toString()] = {
+        employeeDetail: emp,
+        children: [],
+        ownLeads: [],
+      };
+    });
 
-        return {
-          employee,
-          leads,
-          totalLead,
-          totalPipelineValue,
-          countWonLeads,
-          countLostLeads,
-        };
-      })
-    );
+    fetchLeads.forEach((lead) => {
+      const id = lead.assignedTo.toString();
+      if (dataSet[id]) {
+        dataSet[id].ownLeads.push(lead);
+      }
+    });
 
-    console.log(dataSet);
+    fetchEmployees.forEach((emp) => {
+      if (emp.reportingPerson) {
+        const managerId = emp.reportingPerson._id.toString();
+
+        if (dataSet[managerId]) {
+          dataSet[managerId].children.push(dataSet[emp._id.toString()]);
+        }
+      }
+    });
+
+    const TeamsData = (data) => {
+      let totalLeads = data.ownLeads.length;
+
+      let totalPipelineValue = data.ownLeads.reduce(
+        (sum, lead) => sum + Number(lead.dealValue || 0),
+        0
+      );
+
+      let countWonLeads = data.ownLeads.filter(
+        (lead) => lead.status === "Decision (Won)"
+      ).length;
+
+      let countLostLeads = data.ownLeads.filter(
+        (lead) => lead.status === "Decision (Lost)"
+      ).length;
+
+      for (const child of data.children) {
+        const childData = TeamsData(child);
+
+        totalLeads += childData.totalLeads;
+        totalPipelineValue += childData.totalPipelineValue;
+        countWonLeads += childData.countWonLeads;
+        countLostLeads += childData.countLostLeads;
+      }
+
+      data.metrics = {
+        totalLeads,
+        totalPipelineValue,
+        countWonLeads,
+        countLostLeads,
+      };
+
+      return data.metrics
+    };
+
+    const root = dataSet[employeeID.toString()];
+
+    TeamsData(root);
+
+    const result = Object.values(dataSet).map((e) => ({
+      employeeDetail: e.employeeDetail,
+      metrics: e.metrics,
+    }));
+
+    // const finalData = Object.values(dataSet).map((rec)=> {
+    //   return (TeamsData(rec))
+    // })
+
+    // const dataSet = await Promise.all(
+    //   accessibleUsers.map(async (employeeID) => {
+    //     const employee = await Employee.find({
+    //       organisationID: organisationID,
+    //       _id: employeeID,
+    //     })
+    //       .populate("role reportingPerson")
+    //       .select("-password -refreshToken");
+    //     const [hierarchy] = await Employee.aggregate([
+    //       {
+    //         $match: {
+    //           _id: employeeID,
+    //         },
+    //       },
+    //       {
+    //         $graphLookup: {
+    //           from: "employees",
+    //           startWith: "$_id",
+    //           connectFromField: "_id",
+    //           connectToField: "reportingPerson",
+    //           as: "subordinates",
+    //         },
+    //       },
+    //     ]);
+
+    //     const employeeIds = [
+    //       employeeID,
+    //       ...hierarchy.subordinates.map((emp) => emp._id),
+    //     ];
+
+    //     const leads = await Leads.find({
+    //       assignedTo: {
+    //         $in: employeeIds,
+    //       },
+    //     });
+    //     const totalLead = await leads.length;
+
+    //     const totalPipelineValue = await leads.reduce(
+    //       (sum, lead) => sum + Number(lead.dealValue),
+    //       0
+    //     );
+
+    //     const countWonLeads = await leads.filter(
+    //       (lead) => lead.status === "Decision (Won)"
+    //     ).length;
+
+    //     const countLostLeads = await leads.filter(
+    //       (lead) => lead.status === "Decision (Lost)"
+    //     ).length;
+
+    //     return {
+    //       employee,
+    //       leads,
+    //       totalLead,
+    //       totalPipelineValue,
+    //       countWonLeads,
+    //       countLostLeads,
+    //     };
+    //   })
+    // );
+
+    console.log(result);
 
     res
       .status(200)
-      .json(new APIResponse(200, dataSet, "Team fetched successfully"));
+      .json(new APIResponse(200, result, "Team fetched successfully"));
   } catch (error) {
     res.status(error.statusCode || 500).json({
       success: false,
@@ -255,4 +369,131 @@ const getTeamData = async (req, res) => {
   }
 };
 
-export { createNewEmployee, employeeData, getTeamData };
+const getProfileData = async (req, res) => {
+    try {
+    const organisationID = req.context.organisationID;
+    const employeeID = req.context.employeeID;
+    
+    const [employees] = await Employee.aggregate([
+      {
+        $match: {
+          _id: employeeID,
+        },
+      },
+      {
+        $graphLookup: {
+          from: "employees",
+          startWith: "$_id",
+          connectFromField: "_id",
+          connectToField: "reportingPerson",
+          depthField: "level",
+          as: "subordinates",
+        },
+      },
+    ]);
+
+    
+
+    if (!employees) {
+      throw new APIError(409, "No employees found");
+    }
+
+    const accessibleUsers = [
+      employeeID,
+      ...employees.subordinates.map((emp) => emp._id),
+    ];
+
+    const fetchEmployees = await Employee.find({
+      _id: { $in: accessibleUsers },
+    })
+      .populate("role reportingPerson")
+      .select("-password -refreshToken");
+
+    const fetchLeads = await Leads.find({
+      assignedTo: {
+        $in: accessibleUsers,
+      },
+    });
+
+    const dataSet = {};
+
+    fetchEmployees.forEach((emp) => {
+      dataSet[emp._id.toString()] = {
+        employeeDetail: emp,
+        children: [],
+        ownLeads: [],
+      };
+    });
+
+    fetchLeads.forEach((lead) => {
+      const id = lead.assignedTo.toString();
+      if (dataSet[id]) {
+        dataSet[id].ownLeads.push(lead);
+      }
+    });
+
+    fetchEmployees.forEach((emp) => {
+      if (emp.reportingPerson) {
+        const managerId = emp.reportingPerson._id.toString();
+
+        if (dataSet[managerId]) {
+          dataSet[managerId].children.push(dataSet[emp._id.toString()]);
+        }
+      }
+    });
+
+    const TeamsData = (data) => {
+      let totalLeads = data.ownLeads.length;
+
+      let totalPipelineValue = data.ownLeads.reduce(
+        (sum, lead) => sum + Number(lead.dealValue || 0),
+        0
+      );
+
+      let countWonLeads = data.ownLeads.filter(
+        (lead) => lead.status === "Decision (Won)"
+      ).length;
+
+      let countLostLeads = data.ownLeads.filter(
+        (lead) => lead.status === "Decision (Lost)"
+      ).length;
+
+      for (const child of data.children) {
+        const childData = TeamsData(child);
+
+        totalLeads += childData.totalLeads;
+        totalPipelineValue += childData.totalPipelineValue;
+        countWonLeads += childData.countWonLeads;
+        countLostLeads += childData.countLostLeads;
+      }
+
+      data.metrics = {
+        totalLeads,
+        totalPipelineValue,
+        countWonLeads,
+        countLostLeads,
+      };
+
+      return data.metrics
+    };
+
+    const root = dataSet[employeeID.toString()];
+
+    TeamsData(root);
+
+    const result = dataSet[employeeID.toString()]
+
+    console.log(result);
+
+    res
+      .status(200)
+      .json(new APIResponse(200, result, "Team fetched successfully"));
+  } catch (error) {
+    res.status(error.statusCode || 500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export { createNewEmployee, employeeData, getTeamData, getProfileData };
