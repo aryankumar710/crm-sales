@@ -59,7 +59,6 @@ export const Registration = () => {
     data.append("phoneNumber", form.phoneNumber);
     data.append("password", form.password);
 
-    // dispatch(registerOrganisation(data));
 
     try {
       const res = await register(data).unwrap();

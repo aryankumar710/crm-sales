@@ -1,7 +1,7 @@
-.heading{
-    font-size: 1.75rem;
-    font-weight: 500;
-    color: var(--primary-font-color);
+.heading {
+  font-size: 1.75rem;
+  font-weight: 500;
+  color: var(--primary-font-color);
 }
 
 .box {
@@ -19,7 +19,58 @@
   justify-content: space-between;
 }
 
-.verticle{
-    display: flex;
-    flex-direction: column;
+.verticle {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.editButtonAlignment {
+  display: flex;
+  gap: 0.5rem;
+}
+.subHeading {
+  color: var(--primary-font-color);
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.profileImage {
+  background-image: url("public/ix_user-profile-filled.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  width: 6.25rem;
+  height: 6.25rem;
+}
+
+.saveButtonAlignment {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+}
+
+.saveButton {
+  width: 18%;
+}
+
+.image {
+  width: 6.25rem;
+  height: 6.25rem;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.formBox {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+.form {
+  width: 100%;
+  gap: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  border-radius: 0;
+  padding: 0;
 }

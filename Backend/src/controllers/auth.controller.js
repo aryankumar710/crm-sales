@@ -270,19 +270,20 @@ const registerSuperAdmin = async (req, res) => {
     const loggedInEmployee = await Employee.findOne({
       employeeEmail: employeeEmail,
     });
+
+    if (!loggedInEmployee) {
+      throw new APIError(400, "Employee not found");
+    }
     loggedInEmployee.employeeName = employeeName;
     loggedInEmployee.phoneNumber = phoneNumber;
     loggedInEmployee.password = password;
 
     console.log(loggedInEmployee);
 
-    if (!loggedInEmployee) {
-      throw new APIError(400, "Employee not found");
-    }
-
     const loggedInOrganisation = await Organisation.findById(
       loggedInEmployee?.organisationID
     );
+
     console.log(loggedInOrganisation);
 
     if (!loggedInOrganisation) {
@@ -455,7 +456,12 @@ const logout = async (req, res) => {
       .clearCookie("accessToken", option)
       .clearCookie("refreshToken", option)
       .json(new APIResponse(200, {}, "User logged Out"));
-  } catch (error) {}
+  } catch (error) {
+     res.status(error.statusCode || 500).json({
+      success: false,
+      message: error.message,
+    });
+  }
 };
 
 const getMe = async (req, res) => {

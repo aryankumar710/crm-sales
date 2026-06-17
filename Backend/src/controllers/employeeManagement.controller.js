@@ -7,6 +7,7 @@ import crypto from "crypto";
 import { sendInviteEmail } from "../utils/invitationToken.js";
 import { Role } from "../models/roles.model.js";
 import { Leads } from "../models/leads.model.js";
+import { deleteFromCloudinary, uploadOnCloudinary } from "../utils/cloudinary.js";
 
 const createNewEmployee = async (req, res) => {
   try {
@@ -279,7 +280,7 @@ const getTeamData = async (req, res) => {
         countLostLeads,
       };
 
-      return data.metrics
+      return data.metrics;
     };
 
     const root = dataSet[employeeID.toString()];
@@ -290,71 +291,6 @@ const getTeamData = async (req, res) => {
       employeeDetail: e.employeeDetail,
       metrics: e.metrics,
     }));
-
-    // const finalData = Object.values(dataSet).map((rec)=> {
-    //   return (TeamsData(rec))
-    // })
-
-    // const dataSet = await Promise.all(
-    //   accessibleUsers.map(async (employeeID) => {
-    //     const employee = await Employee.find({
-    //       organisationID: organisationID,
-    //       _id: employeeID,
-    //     })
-    //       .populate("role reportingPerson")
-    //       .select("-password -refreshToken");
-    //     const [hierarchy] = await Employee.aggregate([
-    //       {
-    //         $match: {
-    //           _id: employeeID,
-    //         },
-    //       },
-    //       {
-    //         $graphLookup: {
-    //           from: "employees",
-    //           startWith: "$_id",
-    //           connectFromField: "_id",
-    //           connectToField: "reportingPerson",
-    //           as: "subordinates",
-    //         },
-    //       },
-    //     ]);
-
-    //     const employeeIds = [
-    //       employeeID,
-    //       ...hierarchy.subordinates.map((emp) => emp._id),
-    //     ];
-
-    //     const leads = await Leads.find({
-    //       assignedTo: {
-    //         $in: employeeIds,
-    //       },
-    //     });
-    //     const totalLead = await leads.length;
-
-    //     const totalPipelineValue = await leads.reduce(
-    //       (sum, lead) => sum + Number(lead.dealValue),
-    //       0
-    //     );
-
-    //     const countWonLeads = await leads.filter(
-    //       (lead) => lead.status === "Decision (Won)"
-    //     ).length;
-
-    //     const countLostLeads = await leads.filter(
-    //       (lead) => lead.status === "Decision (Lost)"
-    //     ).length;
-
-    //     return {
-    //       employee,
-    //       leads,
-    //       totalLead,
-    //       totalPipelineValue,
-    //       countWonLeads,
-    //       countLostLeads,
-    //     };
-    //   })
-    // );
 
     console.log(result);
 
@@ -370,10 +306,10 @@ const getTeamData = async (req, res) => {
 };
 
 const getProfileData = async (req, res) => {
-    try {
+  try {
     const organisationID = req.context.organisationID;
     const employeeID = req.context.employeeID;
-    
+
     const [employees] = await Employee.aggregate([
       {
         $match: {
@@ -391,8 +327,6 @@ const getProfileData = async (req, res) => {
         },
       },
     ]);
-
-    
 
     if (!employees) {
       throw new APIError(409, "No employees found");
@@ -474,14 +408,14 @@ const getProfileData = async (req, res) => {
         countLostLeads,
       };
 
-      return data.metrics
+      return data.metrics;
     };
 
     const root = dataSet[employeeID.toString()];
 
     TeamsData(root);
 
-    const result = dataSet[employeeID.toString()]
+    const result = dataSet[employeeID.toString()];
 
     console.log(result);
 
@@ -496,4 +430,107 @@ const getProfileData = async (req, res) => {
   }
 };
 
-export { createNewEmployee, employeeData, getTeamData, getProfileData };
+const updateProfileData = async (req, res) => {
+  try {
+    console.log(req.body);
+    const {
+      employeeName,
+      employeeEmail,
+      phoneNumber,
+      oldPassword,
+      newPassword,
+    } = req.body;
+
+    if (
+      [employeeName, employeeEmail, phoneNumber, oldPassword, newPassword].some(
+        (field) => {
+          return field?.trim() === "";
+        }
+      )
+    ) {
+      throw new APIError(400, "All fields must be filled");
+    }
+
+    const employeeID = req.context.employeeID;
+
+    const employee = await Employee.findOne({ _id: employeeID });
+    console.log(employee);
+
+    if (!employee) {
+      throw new APIError(409, "No employee found");
+    }
+
+    const passwordVerification = await employee.isPasswordCorrect(oldPassword);
+    console.log(passwordVerification);
+
+    if (passwordVerification === false) {
+      throw new APIError(401, "Password Incorrect");
+    }
+
+    const compareOldAndNewPassword =
+      await employee.comparePasswords(newPassword);
+    console.log(compareOldAndNewPassword);
+
+    if (compareOldAndNewPassword === true) {
+      throw new APIError(409, "New and old passwords cannot be same");
+    }
+
+    employee.employeeName = employeeName;
+    employee.employeeEmail = employeeEmail;
+    employee.phoneNumber = phoneNumber;
+    employee.password = newPassword;
+
+    await employee.save();
+  } catch (error) {
+    res.status(error.statusCode || 500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+const changeProfilePhoto = async (req, res) => {
+  try {
+    const photoPath = req.file.path
+    const organisationID = req.context.organisationID
+    const organisation = await Organisation.findOne({_id: organisationID})
+    const employee = req.context.employee
+    let profile = ""
+    if(employee.profilePhoto === null || undefined){
+      profile = await uploadOnCloudinary(photoPath, organisation)
+      if(!profile.url) {
+        throw new APIError(409, "Profile photo is not uploaded properly");
+      }
+      employee.profilePhoto = profile.url
+      employee.profilePhotoPublicId = profile.public_id
+
+      await employee.save()
+    }else{
+      const toBeDeletedPhoto = employee.profilePhotoPublicId
+      const deletingPhoto = await deleteFromCloudinary(toBeDeletedPhoto)
+      profile = await uploadOnCloudinary(photoPath, organisation)
+      if(!profile.url) {
+        throw new APIError(409, "Profile photo is not uploaded properly");
+      }
+      employee.profilePhoto = profile.url
+      employee.profilePhotoPublicId = profile.public_id
+      await employee.save()
+    }
+
+    res.status(200).json(new APIResponse(200, employee.profilePhoto, "Photo changed successfully"))
+  } catch (error) {
+     res.status(error.statusCode || 500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+}
+
+export {
+  createNewEmployee,
+  employeeData,
+  getTeamData,
+  getProfileData,
+  updateProfileData,
+  changeProfilePhoto
+};

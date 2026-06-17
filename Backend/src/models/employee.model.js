@@ -9,7 +9,7 @@ const EmployeeSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Organisation",
     },
-    
+
     employeeName: {
       type: String,
       trim: true,
@@ -59,6 +59,12 @@ const EmployeeSchema = mongoose.Schema(
     invitationToken: {
       type: String,
     },
+    profilePhoto: {
+      type: String,
+    },
+    profilePhotoPublicId: {
+      type: String
+    }
   },
   { timestamps: true }
 );
@@ -102,6 +108,10 @@ EmployeeSchema.pre("save", async function (next) {
 
 EmployeeSchema.methods.isPasswordCorrect = async function (password) {
   return await bcrypt.compare(password, this.password);
+};
+
+EmployeeSchema.methods.comparePasswords = async function (newPassword) {
+  return await bcrypt.compare(newPassword, this.password);
 };
 
 EmployeeSchema.methods.generateAccessToken = function () {

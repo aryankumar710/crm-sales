@@ -1,7 +1,7 @@
 import styles from "../TeamMembersCard/TeamMembersCard.component.module.css";
-import { TertiaryButton } from "../../components/Buttons/TertiaryButton.component";
+import { TertiaryButton } from "../../components/Buttons/TertiaryButton.component.jsx";
 
-export const TeamMembersCard = ({ data}) => {
+export const TeamMembersCard = ({ data, text, onClick}) => {
   const joiningDate = new Date(data?.employeeDetail?.createdAt).toLocaleDateString(
     "en-IN",
     {
@@ -66,7 +66,7 @@ export const TeamMembersCard = ({ data}) => {
           </div>
         </div>
         <div className={styles.button}>
-          <TertiaryButton >View</TertiaryButton>
+          <TertiaryButton onClick={onClick}>{text}</TertiaryButton>
         </div>
       </div>
     </>

@@ -108,12 +108,32 @@ export const api = createApi({
     }),
 
     getTeam: builder.query({
-      query: () => "/teamData"
+      query: () => "/teamData",
     }),
 
-    getProfile : builder.query({
-      query: () => "/profileData"
-    })
+    getProfile: builder.query({
+      query: () => "/profileData",
+    }),
+    updateProfileData: builder.mutation({
+      query: (data) => ({
+        url: "/updateProfileData",
+        body: data,
+        method: "PATCH",
+      }),
+    }),
+    changeProfilePhoto: builder.mutation({
+      query: (data) => ({
+        url: "/changeProfilePhoto",
+        method: "PATCH",
+        body: data,
+      }),
+    }),
+    logout: builder.mutation({
+      query: () => ({
+        url: "/logout",
+        method: "POST"
+      }),
+    }),
   }),
 });
 
@@ -131,5 +151,8 @@ export const {
   useAddLeadMutation,
   useGetLeadsQuery,
   useGetTeamQuery,
-  useGetProfileQuery
+  useGetProfileQuery,
+  useUpdateProfileDataMutation,
+  useChangeProfilePhotoMutation,
+  useLogoutMutation
 } = api;

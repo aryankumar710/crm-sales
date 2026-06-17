@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import styles from "../Header/Header.component.module.css";
 import { useSelector, useDispatch } from "react-redux";
 import { useGetMeQuery } from "../../features/API/api.js";
@@ -8,6 +8,7 @@ import { setEmployee } from "../../features/API/slice.js";
 export const Header = () => {
   const dispatch = useDispatch();
   const employee = useSelector((state) => state.auth.employee);
+  const navigate = useNavigate()
 
   const { data, isLoading } = useGetMeQuery();
 
@@ -18,6 +19,12 @@ export const Header = () => {
       dispatch(setEmployee(data?.data));
     }
   }, [data]);
+
+  function handleProfileClick(e){
+    if(employeeType !== "HR Admin"){
+      navigate("/profile")
+    }
+  }
 
   return (
     <>
@@ -163,10 +170,10 @@ export const Header = () => {
           </NavLink>
         </nav>
 
-        <div className={styles.companyBackgroundImage}>
+        <div className={styles.companyBackgroundImage} onClick={handleProfileClick}>
           <img
             className={styles.image}
-            src="ix_user-profile-filled.png"
+            src={data?.data?.loggedInEmployee?.profilePhoto}
             alt=""
           />
         </div>

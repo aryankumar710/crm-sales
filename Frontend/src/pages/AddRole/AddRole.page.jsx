@@ -20,7 +20,7 @@ export const AddRole = ({ isOpen, onClose }) => {
   const [form, setForm] = useState({
     roleName: "",
     parentRole: "",
-    roleType: "",
+    roleType: "", 
   });
 
   function onChange(e) {
