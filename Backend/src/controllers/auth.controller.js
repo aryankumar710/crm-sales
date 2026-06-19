@@ -218,7 +218,10 @@ const register = async (req, res) => {
       );
   } catch (error) {
     await session.abortTransaction();
-    throw new APIError(500, "Error creating organisation");
+    res.status(error.statusCode || 500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
 
@@ -251,9 +254,28 @@ const getInviteToken = async (req, res) => {
       employeeEmail: employee.employeeEmail,
     });
   } catch (error) {
-    throw new APIError(500, error.message);
+    res.status(error.statusCode || 500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
+
+const getChangePasswordToken = async(req,res) => {
+  try {
+    const employee = req.employee;
+    console.log(employee)
+    console.log(employee.employeeEmail)
+    res.json({
+      employeeEmail: employee.employeeEmail,
+    });
+  } catch (error) {
+     res.status(error.statusCode || 500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+}
 
 const registerSuperAdmin = async (req, res) => {
   try {
@@ -313,7 +335,10 @@ const registerSuperAdmin = async (req, res) => {
         )
       );
   } catch (error) {
-    throw new APIError(500, error.message);
+    res.status(error.statusCode || 500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
 
@@ -374,11 +399,14 @@ const loginEmployee = async (req, res) => {
         new APIResponse(
           200,
           { loggedInEmployee, loggedInOrganisation },
-          "Loged In"
+          "Logged In"
         )
       );
   } catch (error) {
-    throw new APIError(500, "Error while login");
+    res.status(error.statusCode || 500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
 
@@ -427,7 +455,10 @@ const refreshAccessToken = async (req, res) => {
         )
       );
   } catch (error) {
-    throw new APIError(401, error.message || "Invalid Access Token");
+    res.status(error.statusCode || 500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
 
@@ -457,7 +488,7 @@ const logout = async (req, res) => {
       .clearCookie("refreshToken", option)
       .json(new APIResponse(200, {}, "User logged Out"));
   } catch (error) {
-     res.status(error.statusCode || 500).json({
+    res.status(error.statusCode || 500).json({
       success: false,
       message: error.message,
     });
@@ -485,10 +516,71 @@ const getMe = async (req, res) => {
         )
       );
   } catch (error) {
-    throw new APIError(
-      500,
-      "Error while getting employee or organisation data from getme"
-    );
+    res.status(error.statusCode || 500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+const forgetPassword = async (req, res) => {
+  try {
+    const { employeeEmail } = req.body;
+
+    if (employeeEmail.trim() === "") {
+      throw new APIError(409, "Email cannot be empty");
+    }
+
+    const employee = await Employee.findOne({ employeeEmail: employeeEmail });
+
+    if (!employee) {
+      throw new APIError(409, "Employee does not exist for this email");
+    }
+
+    const generateInviteToken = crypto.randomBytes(32).toString("hex");
+
+    employee.invitationToken = generateInviteToken;
+
+    console.log(employee.employeeEmail)
+
+    await employee.save();
+
+    const link = `http://localhost:8000/change-password?passwordToken=${generateInviteToken}`;
+
+    await sendInviteEmail(employeeEmail, link);
+
+    res.status(200).json(new APIResponse(200, null, "Link sent successfully"));
+  } catch (error) {
+    res.status(error.statusCode || 500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+const changePassword = async (req, res) => {
+  try {
+    
+    const {employeeEmail, newPassword } = req.body;
+    console.log(employeeEmail, newPassword)
+    if (newPassword.trim() === "") {
+      throw new APIError(409, "All fields must not be empty");
+    }
+
+     const employee = await Employee.findOne({ employeeEmail: employeeEmail });
+
+    employee.password = newPassword;
+
+    employee.save();
+
+    res
+      .status(200)
+      .json(new APIResponse(200, null, "Password updated successfully"));
+  } catch (error) {
+    res.status(error.statusCode || 500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
 
@@ -500,4 +592,7 @@ export {
   refreshAccessToken,
   logout,
   getMe,
+  forgetPassword,
+  changePassword,
+  getChangePasswordToken
 };

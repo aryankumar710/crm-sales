@@ -33,7 +33,10 @@
     gap: 2.5rem;
 }
 
-
+.funnelAlignment{
+display: flex;
+justify-content: space-between;
+}
 
 .recentLeadsBox{
     background-color: var(--white);

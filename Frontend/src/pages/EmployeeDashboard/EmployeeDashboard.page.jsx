@@ -14,6 +14,9 @@ import { PrimaryButton } from "../../components/Buttons/PrimaryButton.component.
 import { useGetMeQuery } from "../../features/API/API.js";
 import { AddLeads } from "../AddLeads/AddLeads.page.jsx";
 import { TertiaryButton } from "../../components/Buttons/TertiaryButton.component.jsx";
+import Stack from "@mui/material/Stack";
+import { FunnelChart } from "@mui/x-charts-pro/FunnelChart";
+import { funnelData } from "../../utils/funnelData.js";
 
 //import { populationByEducationLevelPercentageSeries } from './populationByEducationLevel';
 
@@ -27,11 +30,11 @@ export const EmployeeDashboard = () => {
   const navigate = useNavigate();
   const { data, isLoading } = useGetMeQuery();
 
-    useEffect(() => {
-      if (data) {
-        dispatch(setEmployee(data?.data));
-      }
-    }, [data]);
+  useEffect(() => {
+    if (data) {
+      dispatch(setEmployee(data?.data));
+    }
+  }, [data]);
 
   const handleItemNbChange = (event, newValue) => {
     if (typeof newValue !== "number") {
@@ -56,7 +59,7 @@ export const EmployeeDashboard = () => {
     }
   }
 
-    function handleClose() {
+  function handleClose() {
     setOpen(false);
     navigate("/employeeDashboard");
   }
@@ -273,20 +276,38 @@ export const EmployeeDashboard = () => {
                   />
                 </svg>
               </PrimaryButton>
-              
             </div>
           </section>
 
           <section className="glassEffect">
             <div className="subSection">
-              <h1 className={styles.mainHeading}>Funnel</h1>
+              <div className={styles.funnelAlignment}>
+                 <h1 className={styles.mainHeading}>Funnel</h1>
+              <TertiaryButton >View</TertiaryButton>
+              </div>
+             
+              <Stack spacing={2}>
+                <FunnelChart
+                  height={400}
+                  gap={0}
+                  series={[
+                    {
+                      data: funnelData,
+                      curve: "bump",
+                      variant: "filled",
+
+                     
+                    },
+                  ]}
+
+                />
+              </Stack>
             </div>
           </section>
         </div>
       </div>
 
-      <AddLeads isOpen={isOpen} onClose={handleClose}/>
-      
+      <AddLeads isOpen={isOpen} onClose={handleClose} />
     </>
   );
 };
@@ -311,10 +332,3 @@ const series = [
   },
 ].map((s) => ({ ...s, highlightScope }));
 
-const funnelData = [
-  { label: "Leads", value: 1000 },
-  { label: "Contacted", value: 750 },
-  { label: "Qualified", value: 500 },
-  { label: "Proposal", value: 300 },
-  { label: "Won", value: 150 },
-];

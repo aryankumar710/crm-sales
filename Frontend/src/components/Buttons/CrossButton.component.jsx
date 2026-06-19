@@ -1,6 +1,9 @@
+import styles from "../Buttons/Button.component.module.css"
+
+
 export const CrossButton = ({onClick}) => {
   return (
-    <button type="button" onClick={onClick}>
+    <button type="button" onClick={onClick} className={styles.crossButton}>
       <svg
         width="28"
         height="28"

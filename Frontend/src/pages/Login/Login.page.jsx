@@ -3,7 +3,7 @@ import { useLoginMutation } from "../../features/API/api.js";
 import { useDispatch } from "react-redux";
 import { setEmployee } from "../../features/API/slice.js";
 import { PasswordInputField } from "../../components/InputFields/PasswordInputField.jsx";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "../Login/Login.page.module.css";
 import { PrimaryButton } from "../../components/Buttons/PrimaryButton.component.jsx";
 import { PlainInputField } from "../../components/inputFields/PlainInputfield.jsx";
@@ -24,13 +24,12 @@ export const Login = () => {
     try {
       const res = await login(form).unwrap();
       dispatch(setEmployee(res?.data));
-      console.log(res?.data)
-      if(res?.data?.loggedInEmployee.role.roleType === "HR Admin"){
+      console.log(res?.data);
+      if (res?.data?.loggedInEmployee.role.roleType === "HR Admin") {
         navigate("/adminDashboard");
-      }else{
-        navigate("/employeeDashboard")
+      } else {
+        navigate("/employeeDashboard");
       }
-      
     } catch (error) {
       console.log(error);
     }
@@ -81,7 +80,12 @@ export const Login = () => {
                 />
               </svg>
             </PrimaryButton>
+            <div className={styles.link}>
+              <Link to="/forgetPassword">Forgot Password?</Link>
+            </div>
+            
           </form>
+          
         </div>
       </div>
     </>

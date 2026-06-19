@@ -9,6 +9,9 @@ import {
   refreshAccessToken,
   logout,
   getMe,
+  changePassword,
+  forgetPassword,
+  getChangePasswordToken,
 } from "../controllers/auth.controller.js";
 import { inviteTokenValidate } from "../middlewares/inviteTokenValidate.js";
 
@@ -31,5 +34,11 @@ authRouter.route("/refresh-token").post(refreshAccessToken);
 authRouter.route("/logout").post(verifyJWT, logout);
 
 authRouter.route("/getMe").get(verifyJWT, getMe)
+
+authRouter.route("/forgetPassword").post(forgetPassword)
+
+authRouter.route("/changePasswordToken").get(inviteTokenValidate,getChangePasswordToken)
+
+authRouter.route("/changePassword").post(changePassword)
 
 export { authRouter };

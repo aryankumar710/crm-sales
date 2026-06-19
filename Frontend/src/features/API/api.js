@@ -82,6 +82,23 @@ export const api = createApi({
       }),
     }),
 
+    getChangePasswordToken : builder.query({
+      query: (token) => ({
+        url: "/changePasswordToken",
+        params: {token}
+      })
+    }),
+
+    forgetPassword : builder.mutation({
+      query: (data) => ({
+        url: "/forgetPassword",
+        body: data,
+        method: "POST"
+      })
+    }),
+
+    
+
     updateSuperAdmin: builder.mutation({
       query: (data) => ({
         url: "/setPassword",
@@ -134,7 +151,14 @@ export const api = createApi({
         method: "POST"
       }),
     }),
-  }),
+    changePassword : builder.mutation({
+      query: (data) => ({
+        url: "/changePassword",
+        method: "POST",
+        body : data
+      })
+    })
+  })
 });
 
 export const {
@@ -154,5 +178,9 @@ export const {
   useGetProfileQuery,
   useUpdateProfileDataMutation,
   useChangeProfilePhotoMutation,
-  useLogoutMutation
+  useLogoutMutation,
+  useChangePasswordMutation,
+  useForgetPasswordMutation,
+  useGetChangePasswordTokenQuery
+ 
 } = api;

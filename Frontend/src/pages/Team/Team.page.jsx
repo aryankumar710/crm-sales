@@ -33,9 +33,11 @@ export const Team = () => {
           </div> */}
 
         {getLeads?.data?.map((leadsData) => {
-          return <TeamMembersCard data={leadsData} />;
+          return <TeamMembersCard data={leadsData} text={"View"}/>;
         })}
       </section>
     </>
   );
 };
+
+

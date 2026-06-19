@@ -19,6 +19,8 @@ import { AddLeads } from "./pages/AddLeads/AddLeads.page.jsx";
 import { Leads } from "./pages/Leads/Leads.page.jsx";
 import { Team } from "./pages/Team/Team.page.jsx";
 import { Profile } from "./pages/Profile/Profile.page.jsx";
+import { ForgetPassword } from "./pages/ForgetPassword/ForgetPassword.page.jsx";
+import { ChangePassword } from "./pages/ChangePassword/ChangePassword.page.jsx";
 
 function App() {
   const router = createBrowserRouter([
@@ -80,6 +82,14 @@ function App() {
       path: "/profile",
       element: <VerticalLayout/>,
       children: [{path: "", element: <Profile/>}]
+    },
+    {
+      path: "/forgetPassword",
+      element: <ForgetPassword/>
+    },
+    {
+      path: "/change-password",
+      element: <ChangePassword/>
     }
   ]);
   return <RouterProvider router={router} />;

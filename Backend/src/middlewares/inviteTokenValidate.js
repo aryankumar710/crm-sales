@@ -7,7 +7,6 @@ export const inviteTokenValidate = async (req, res, next) => {
     const employee = await Employee.findOne({
       invitationToken: token,
     });
-   // console.log(employee)
 
     if (!employee) {
       throw new APIError(400, "Invalid or expired token");

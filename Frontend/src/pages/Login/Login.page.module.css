@@ -1,0 +1,8 @@
+.link {
+    display: flex;
+    justify-content: end;
+}
+
+.link Link{
+    color: var(--secondary-font-color);
+}
