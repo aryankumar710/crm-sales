@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setEmployee } from "../../features/API/slice.js";
-import { PlainInputField } from "../../components/inputFields/PlainInputfield.jsx";
+import { PlainInputField } from "../../components/InputFields/PlainInputfield.jsx";
 import { PhoneInputField } from "../../components/InputFields/PhoneInputField.jsx";
 import { PasswordInputField } from "../../components/InputFields/PasswordInputField.jsx";
 import { FileInputField } from "../../components/InputFields/FileInputField.jsx";

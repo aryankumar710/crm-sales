@@ -6,7 +6,7 @@ import { PasswordInputField } from "../../components/InputFields/PasswordInputFi
 import { Link, useNavigate } from "react-router-dom";
 import styles from "../Login/Login.page.module.css";
 import { PrimaryButton } from "../../components/Buttons/PrimaryButton.component.jsx";
-import { PlainInputField } from "../../components/inputFields/PlainInputfield.jsx";
+import { PlainInputField } from "../../components/InputFields/PlainInputfield.jsx";
 import { LoginRegisterBanner } from "../../components/LoginRegistration/LoginRegisterBanner.component.jsx";
 
 export const Login = () => {

@@ -5,7 +5,7 @@ import {
   useGetChangePasswordTokenQuery,
 } from "../../features/API/api";
 import { useSearchParams } from "react-router-dom";
-import { PlainInputField } from "../../components/inputFields/PlainInputfield.jsx";
+import { PlainInputField } from "../../components/InputFields/PlainInputfield.jsx";
 import { PrimaryButton } from "../../components/Buttons/PrimaryButton.component";
 import { PasswordInputField } from "../../components/InputFields/PasswordInputField.jsx";
 
