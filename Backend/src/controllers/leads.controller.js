@@ -3,6 +3,7 @@ import { APIError } from "../utils/APIerror.js";
 import { APIResponse } from "../utils/APIresponse.js";
 import { createLeads } from "../utils/createLeads.js";
 import { Employee } from "../models/employee.model.js";
+import { getLeadsList } from "../utils/getLeadsList.js";
 
 const addLead = async (req, res) => {
   try {
@@ -35,7 +36,6 @@ const addLead = async (req, res) => {
 
     const employeeID = req.context.employeeID;
 
-
     const leads = await createLeads({
       assignedTo: employeeID,
       clientName: clientName,
@@ -46,7 +46,6 @@ const addLead = async (req, res) => {
       phoneNumber: phoneNumber,
       dealValue: dealValue,
     });
-
 
     if (!leads) {
       throw new APIError(409, "Error while creating new lead");
@@ -61,6 +60,38 @@ const addLead = async (req, res) => {
   }
 };
 
+// const editLead = async (req, res) => {
+//   try {
+//     const {
+//       clientName,
+//       projectInfo,
+//       status,
+//       source,
+//       email,
+//       phoneNumber,
+//       dealValue,
+//     } = req.body;
+
+//     if (
+//       [
+//         clientName,
+//         projectInfo,
+//         status,
+//         source,
+//         email,
+//         phoneNumber,
+//         dealValue,
+//       ].some((field) => {
+//         return field?.trim() === "";
+//       })
+//     ) {
+//       throw new APIError(400, "All fields must be filled");
+//     }
+
+//     const findLead = await Leads.findOne({ clientName: clientName });
+//   } catch (error) {}
+// };
+
 const getLeads = async (req, res) => {
   try {
     const page = Number(req.query.page) || 1;
@@ -68,7 +99,6 @@ const getLeads = async (req, res) => {
 
     const skip = (page - 1) * limit;
     const employeeID = req.context.employeeID;
-   
 
     const [employee] = await Employee.aggregate([
       {
@@ -88,7 +118,7 @@ const getLeads = async (req, res) => {
       },
     ]);
 
-    console.log(employee)
+    console.log(employee);
 
     if (!employee) {
       throw new APIError(404, "Employee not found");
@@ -98,7 +128,6 @@ const getLeads = async (req, res) => {
       employeeID,
       ...employee.subordinates.map((emp) => emp._id),
     ];
-    
 
     const totalLeads = await Leads.countDocuments({
       assignedTo: { $in: accessibleUsers },
@@ -132,4 +161,72 @@ const getLeads = async (req, res) => {
   }
 };
 
-export { addLead, getLeads };
+const getFunnelData = async (req, res) => {
+  try {
+    const employeeID = req.context.employeeID;
+    console.log(employeeID);
+    const { leads, totalLeads } = await getLeadsList(employeeID);
+    const suspect = leads.filter((lead) => {
+      return lead.status === "Suspect";
+    }).length;
+
+    const prospect = leads.filter((lead) => {
+      return lead.status === "Prospect";
+    }).length;
+
+    const demo = leads.filter((lead) => {
+      return lead.status === "Demo";
+    }).length;
+
+    const proposal = leads.filter((lead) => {
+      return lead.status === "Proposal";
+    }).length;
+
+    const negotiation = leads.filter((lead) => {
+      return lead.status === "Negotiation";
+    }).length;
+
+    const leadsWon = leads.filter((lead) => {
+      return lead.status === "Decision (Won)";
+    }).length;
+    console.log(leadsWon);
+
+    const leadsLost = leads.filter((lead) => {
+      return lead.status === "Decision (Lost)";
+    }).length;
+    console.log(leadsLost);
+
+    const decision = leadsLost + leadsWon;
+    console.log(decision);
+    const leadsInProgress = totalLeads - decision;
+    console.log(leadsInProgress);
+
+    res
+      .status(200)
+      .json(
+        new APIResponse(
+          200,
+          {
+            suspect,
+            prospect,
+            demo,
+            proposal,
+            negotiation,
+            decision,
+            totalLeads,
+            leadsInProgress,
+            leadsWon,
+            leadsLost,
+          },
+          "Funnel Data Fetched"
+        )
+      );
+  } catch (error) {
+    res.status(error.statusCode || 500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export { addLead, getLeads, getFunnelData };

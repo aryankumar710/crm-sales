@@ -10,7 +10,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const api = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
-    baseUrl: "/api/v1",
+    baseUrl: import.meta.env.VITE_API_URL,
     credentials: "include",
   }),
 
@@ -157,6 +157,12 @@ export const api = createApi({
         method: "POST",
         body : data
       })
+    }),
+    getFunnelData: builder.query({
+      query : () => ({
+        url: "/getFunnelData"
+      }),
+      providesTags: ["Leads"]
     })
   })
 });
@@ -181,6 +187,7 @@ export const {
   useLogoutMutation,
   useChangePasswordMutation,
   useForgetPasswordMutation,
-  useGetChangePasswordTokenQuery
+  useGetChangePasswordTokenQuery,
+  useGetFunnelDataQuery
  
 } = api;
