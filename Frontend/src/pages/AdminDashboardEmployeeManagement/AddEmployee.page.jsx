@@ -1,7 +1,7 @@
 //import { createPortal } from "react-dom";
 import { Modal } from "../../components/Modals/Modal.component.jsx";
 import { PrimaryButton } from "../../components/Buttons/PrimaryButton.component.jsx";
-import { PlainInputField } from "../../components/InputFields/PlainInputfield.jsx";
+import { PlainInputField } from "../../components/InputFields/PlainInputField.jsx";
 import { PhoneInputField } from "../../components/InputFields/PhoneInputField.jsx";
 import { PasswordInputField } from "../../components/InputFields/PasswordInputField.jsx";
 import styles from "../AdminDashboardEmployeeManagement/EmployeeManagement.page.module.css";

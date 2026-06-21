@@ -9,7 +9,7 @@ import { setEmployee } from "../../features/API/slice.js";
 import { Modal } from "../../components/Modals/Modal.component.jsx";
 import { useLocation, useNavigate } from "react-router-dom";
 import { PrimaryButton } from "../../components/Buttons/PrimaryButton.component.jsx";
-import { PlainInputField } from "../../components/InputFields/PlainInputfield.jsx";
+import { PlainInputField } from "../../components/InputFields/PlainInputField.jsx";
 import { LoginRegisterBanner } from "../../components/LoginRegistration/LoginRegisterBanner.component.jsx";
 import { PasswordInputField } from "../../components/InputFields/PasswordInputField.jsx";
 import { AddEmployee } from "../AdminDashboardEmployeeManagement/AddEmployee.page.jsx";

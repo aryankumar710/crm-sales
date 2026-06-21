@@ -1,6 +1,6 @@
 import { CrossButton } from "../../components/Buttons/CrossButton.component";
 import { Dropdown } from "../../components/InputFields/Dropdown.component";
-import { PlainInputField } from "../../components/InputFields/PlainInputfield";
+import { PlainInputField } from "../../components/InputFields/PlainInputField";
 import { Modal } from "../../components/Modals/Modal.component";
 import { projectStatus } from "../../utils/projectStatus.js";
 import { PrimaryButton } from "../../components/Buttons/PrimaryButton.component.jsx";

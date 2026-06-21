@@ -1,5 +1,5 @@
 import { LoginRegisterBanner } from "../../components/LoginRegistration/LoginRegisterBanner.component";
-import { PlainInputField } from "../../components/InputFields/PlainInputfield.jsx";
+import { PlainInputField } from "../../components/InputFields/PlainInputField.jsx";
 import { PhoneInputField } from "../../components/InputFields/PhoneInputField.jsx";
 import { PasswordInputField } from "../../components/InputFields/PasswordInputField.jsx";
 import { useNavigate, useSearchParams } from "react-router-dom";
