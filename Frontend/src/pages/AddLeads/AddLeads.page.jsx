@@ -5,7 +5,7 @@ import { Modal } from "../../components/Modals/Modal.component";
 import { projectStatus } from "../../utils/projectStatus.js";
 import { PrimaryButton } from "../../components/Buttons/PrimaryButton.component.jsx";
 import { useState } from "react";
-import { useAddLeadMutation } from "../../features/API/API.js";
+import { useAddLeadMutation } from "../../features/API/api.js";
 import styles from "../AddLeads/AddLeads.page.module.css";
 import { PhoneInputField } from "../../components/InputFields/PhoneInputField.jsx";
 
