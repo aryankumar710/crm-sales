@@ -5,7 +5,7 @@ import {
   useGetRolesQuery,
 } from "../../features/API/api.js";
 import { PrimaryButton } from "../../components/Buttons/PrimaryButton.component.jsx";
-import { PlainInputField } from "../../components/inputFields/PlainInputfield.jsx";
+import { PlainInputField } from "../../components/InputFields/PlainInputfield.jsx";
 import { Dropdown } from "../../components/InputFields/Dropdown.component.jsx";
 import { CrossButton } from "../../components/Buttons/CrossButton.component.jsx";
 import styles from "../AddRole/AddRole.page.module.css";

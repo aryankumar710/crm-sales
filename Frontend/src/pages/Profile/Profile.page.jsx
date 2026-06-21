@@ -2,7 +2,7 @@ import { useState } from "react";
 import { PrimaryButton } from "../../components/Buttons/PrimaryButton.component.jsx";
 import { TertiaryButton } from "../../components/Buttons/TertiaryButton.component.jsx";
 import { TeamMembersCard } from "../../components/TeamMembersCard/TeamMembersCard.component";
-import { PlainInputField } from "../../components/inputFields/PlainInputfield.jsx";
+import { PlainInputField } from "../../components/InputFields/PlainInputfield.jsx";
 import { PhoneInputField } from "../../components/InputFields/PhoneInputField.jsx";
 import { PasswordInputField } from "../../components/InputFields/PasswordInputField.jsx";
 import { clearUser } from "../../features/API/slice.js";

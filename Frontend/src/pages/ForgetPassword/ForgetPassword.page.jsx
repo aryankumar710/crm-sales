@@ -3,7 +3,7 @@ import { PrimaryButton } from "../../components/Buttons/PrimaryButton.component"
 import { LoginRegisterBanner } from "../../components/LoginRegistration/LoginRegisterBanner.component";
 import { useForgetPasswordMutation } from "../../features/API/api";
 import { useState } from "react";
-import { PlainInputField } from "../../components/inputFields/PlainInputfield.jsx";
+import { PlainInputField } from "../../components/InputFields/PlainInputfield.jsx";
 
 export const ForgetPassword = () => {
   const [forgetPasswordData, { isLoading, isSuccess, error }] =
