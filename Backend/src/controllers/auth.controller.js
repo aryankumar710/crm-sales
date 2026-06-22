@@ -199,10 +199,10 @@ const register = async (req, res) => {
       createOrganisation[0]._id
     );
 
-    const option = {
+   const option = {
       httpOnly: true,
-      secure: false,
-      sameSite: "Lax",
+      secure: true,
+      sameSite: "none",
     };
 
     res
@@ -317,10 +317,10 @@ const registerSuperAdmin = async (req, res) => {
     const { accessToken, refreshToken } =
       await generateAccessTokenAndRefreshToken(loggedInEmployee._id);
 
-    const option = {
+   const option = {
       httpOnly: true,
-      secure: false,
-      sameSite: "Lax",
+      secure: true,
+      sameSite: "none",
     };
 
     res
@@ -387,8 +387,8 @@ const loginEmployee = async (req, res) => {
 
     const option = {
       httpOnly: true,
-      secure: false,
-      sameSite: "Lax",
+      secure: true,
+      sameSite: "none",
     };
 
     res
@@ -436,8 +436,8 @@ const refreshAccessToken = async (req, res) => {
 
     const option = {
       httpOnly: true,
-      secure: false,
-      sameSite: "Lax",
+      secure: true,
+      sameSite: "none",
     };
 
     const { accessToken, newRefreshToken } =
@@ -478,10 +478,9 @@ const logout = async (req, res) => {
 
     const option = {
       httpOnly: true,
-      secure: false,
-      sameSite: "Lax",
+      secure: true,
+      sameSite: "none",
     };
-
     res
       .status(200)
       .clearCookie("accessToken", option)
