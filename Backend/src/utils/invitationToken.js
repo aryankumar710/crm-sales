@@ -22,6 +22,8 @@ export const sendInviteEmail = async (email, link) => {
       },
     });
 
+    console.log(transporter)
+
     // Check SMTP connection
     await transporter.verify();
     console.log("✅ SMTP Connected");
@@ -36,6 +38,8 @@ export const sendInviteEmail = async (email, link) => {
         <a href="${link}">${link}</a>
       `,
     });
+
+    console.log(info)
 
     console.log("✅ Email sent:", info.messageId);
     return info;
