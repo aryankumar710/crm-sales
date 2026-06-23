@@ -68,13 +68,12 @@ const createNewEmployee = async (req, res) => {
       role: employeeRoleId._id,
       reportingPerson: reportingPersonId._id,
       phoneNumber: phoneNumber,
-
       invitationToken: generateInviteToken,
     });
 
     // console.log(employeeData)
 
-    const link = `http://localhost:3000/set-password?token=${generateInviteToken}`;
+    const link = `${process.env.CORS_ORIGIN}/set-password?token=${generateInviteToken}`;
 
     const sendEmail = sendInviteEmail(employeeEmail, link);
 

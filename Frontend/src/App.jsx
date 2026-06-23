@@ -21,76 +21,84 @@ import { Team } from "./pages/Team/Team.page.jsx";
 import { Profile } from "./pages/Profile/Profile.page.jsx";
 import { ForgetPassword } from "./pages/ForgetPassword/ForgetPassword.page.jsx";
 import { ChangePassword } from "./pages/ChangePassword/ChangePassword.page.jsx";
+import { ProtectedRoute } from "./layouts/ProtectedRoute.jsx";
+import { AddEmployee } from "./pages/AdminDashboardEmployeeManagement/AddEmployee.page.jsx";
 
 function App() {
   const router = createBrowserRouter([
     {
-      path: "/",
-      element: <Registration />,
-    },
-    {
-      path: "/adminDashboard",
-      element: <VerticalLayout />,
-      children: [{ path: "", element: <AdminDashboard /> }],
-    },
-    {
-      path: "/adminDashboard/addEmployee",
-      element: <VerticalLayout />,
-      children: [{ path: "", element: <AdminDashboard /> }],
-    },
-    {
-      path: "/adminDashboardRoles",
-      element: <VerticalLayout />,
-      children: [{ path: "", element: <AdminRoles /> }],
-    },
-
-    {
-      path: "/adminDashboardRoles/createRoles",
-      element: <VerticalLayout />,
-      children: [{ path: "", element: <AdminRoles /> }],
-    },
-    {
-      path: "/employeeDashboard",
-      element: <VerticalLayout />,
-      children: [
-        { path: "", element: <EmployeeDashboard /> },
-        { path: "addLead", element: <EmployeeDashboard /> },
-      ],
-    },
-    {
-      path: "/leads",
-      element: <VerticalLayout/>,
-      children: [{path: "", element: <Leads/>},
-        {path: "addLead", element: <Leads/>}
-      ]
-    },
-
-    {
       path: "/login",
       element: <Login />,
+    },
+    { path: "/forgetPassword", element: <ForgetPassword /> },
+    { path: "/change-password", element: <ChangePassword /> },
+    {
+      path: "/register",
+      element: <Registration />,
     },
     {
       path: "/set-password",
       element: <SetPassword />,
     },
     {
-      path: "/team",
-      element: <VerticalLayout/>,
-      children: [{path: "", element: <Team/>}]
+      path: "/",
+      element: (
+        <ProtectedRoute>
+          <VerticalLayout />
+        </ProtectedRoute>
+      ),
+      children: [
+        {
+          path: "adminDashboard",
+          children: [
+            { path: "", element: <AdminDashboard /> },
+            { path: "addEmployee", element: <AdminDashboard /> },
+          ],
+        },
+        // {
+        //   path: "adminDashboard/addEmployee",
+        //   element: <AdminDashboard />,
+        // },
+        {
+          path: "adminDashboardRoles",
+          children: [
+            { path: "", element: <AdminRoles /> },
+            { path: "createRoles", element: <AdminRoles /> },
+          ],
+        },
+        //       {
+        //   path: "adminDashboardRoles/createRoles",
+        //   element: <AdminRoles />,
+        // },
+
+        {
+          path: "employeeDashboard",
+          element: <EmployeeDashboard />,
+        },
+        {
+          path: "employeeDashboard/addLead",
+          element: <EmployeeDashboard />,
+        },
+
+        {
+          path: "leads",
+          element: <Leads />,
+        },
+        {
+          path: "leads/addLead",
+          element: <Leads />,
+        },
+
+        {
+          path: "team",
+          element: <Team />,
+        },
+        {
+          path: "profile",
+          element: <Profile />,
+        },
+      ],
     },
-    {
-      path: "/profile",
-      element: <VerticalLayout/>,
-      children: [{path: "", element: <Profile/>}]
-    },
-    {
-      path: "/forgetPassword",
-      element: <ForgetPassword/>
-    },
-    {
-      path: "/change-password",
-      element: <ChangePassword/>
-    }
   ]);
   return <RouterProvider router={router} />;
 }

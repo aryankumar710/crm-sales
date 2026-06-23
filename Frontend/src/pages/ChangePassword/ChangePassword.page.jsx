@@ -4,7 +4,7 @@ import {
   useChangePasswordMutation,
   useGetChangePasswordTokenQuery,
 } from "../../features/API/api";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { PlainInputField } from "../../components/InputFields/PlainInputField.jsx";
 import { PrimaryButton } from "../../components/Buttons/PrimaryButton.component";
 import { PasswordInputField } from "../../components/InputFields/PasswordInputField.jsx";
@@ -13,6 +13,7 @@ export const ChangePassword = () => {
   const [searchParams] = useSearchParams();
 
   const token = searchParams.get("passwordToken");
+  const navigate = useNavigate()
 
   const { data: getToken, isLoading: dataLoading } =
     useGetChangePasswordTokenQuery(token, {
@@ -42,6 +43,7 @@ export const ChangePassword = () => {
     try {
       const res = await changePasswordData(form).unwrap();
       console.log(res);
+      navigate("/login")
     } catch (error) {
       console.log(error);
     }

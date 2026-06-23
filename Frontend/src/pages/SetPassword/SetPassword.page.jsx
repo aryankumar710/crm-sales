@@ -38,6 +38,8 @@ export const SetPassword = () => {
       setForm({
         ...form,
         employeeEmail: getToken.employeeEmail,
+        employeeName : getToken.employeeName || "",
+        phoneNumber: getToken.phoneNumber || ""
       });
     }
   }, [getToken]);

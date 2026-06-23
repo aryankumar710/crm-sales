@@ -544,7 +544,7 @@ const forgetPassword = async (req, res) => {
 
     await employee.save();
 
-    const link = `http://localhost:8000/change-password?passwordToken=${generateInviteToken}`;
+    const link = `${process.env.CORS_ORIGIN}/change-password?passwordToken=${generateInviteToken}`;
 
     await sendInviteEmail(employeeEmail, link);
 
