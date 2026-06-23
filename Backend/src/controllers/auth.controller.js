@@ -9,6 +9,7 @@ import nodemailer from "nodemailer";
 import { Role } from "../models/roles.model.js";
 import mongoose from "mongoose";
 import { generateAccessTokenAndRefreshToken } from "../utils/generateAccessRefreshToken.js";
+import {sendInviteEmail} from "../utils/invitationToken.js"
 
 //Registration of organisation, hr admin and super admin
 
@@ -225,26 +226,7 @@ const register = async (req, res) => {
   }
 };
 
-const sendInviteEmail = async (email, link) => {
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: process.env.APP_EMAIL,
-      pass: process.env.APP_PASSWORD,
-    },
-  });
 
-  await transporter.sendMail({
-    from: process.env.APP_EMAIL,
-    to: email,
-    subject: "Set your password",
-    html: `
-      <h2>Welcome!</h2>
-      <p>Click below to set your password:</p>
-      <a href="${link}">${link}</a>
-    `,
-  });
-};
 
 const getInviteToken = async (req, res) => {
   try {
