@@ -133,7 +133,7 @@ const register = async (req, res) => {
 
       console.log(createsuperAdmin);
 
-      const link = `http://localhost:8000/set-password?token=${generateInviteToken}`;
+      const link = `${process.env.CORS_ORIGIN}/set-password?token=${generateInviteToken}`;
 
       console.log(link);
 
