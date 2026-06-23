@@ -1,4 +1,4 @@
-import dns from "dns";
+import dns from "dns"
 import nodemailer from "nodemailer";
 
 // Force Node to prefer IPv4 over IPv6
