@@ -20,6 +20,9 @@ export const sendInviteEmail = async (email, link) => {
         user: process.env.APP_EMAIL,
         pass: process.env.APP_PASSWORD,
       },
+        tls: {
+      rejectUnauthorized: false
+   }
     });
 
     console.log(transporter)
