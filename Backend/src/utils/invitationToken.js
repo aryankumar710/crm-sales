@@ -12,7 +12,7 @@ export const sendInviteEmail = async (email, link) => {
       process.env.APP_PASSWORD ? "Present" : "Missing"
     );
 
-    const transporter = nodemailer.createTransport({
+    const transporter = await nodemailer.createTransport({
       host: "smtp.gmail.com",
       port: 587,
       secure: false, // true only for port 465
