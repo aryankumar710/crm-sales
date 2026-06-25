@@ -60,37 +60,92 @@ const addLead = async (req, res) => {
   }
 };
 
-// const editLead = async (req, res) => {
-//   try {
-//     const {
-//       clientName,
-//       projectInfo,
-//       status,
-//       source,
-//       email,
-//       phoneNumber,
-//       dealValue,
-//     } = req.body;
+const editLead = async (req, res) => {
+  try {
+    const {
+      clientName,
+      projectInfo,
+      status,
+      source,
+      email,
+      phoneNumber,
+      dealValue,
+    } = req.body;
 
-//     if (
-//       [
-//         clientName,
-//         projectInfo,
-//         status,
-//         source,
-//         email,
-//         phoneNumber,
-//         dealValue,
-//       ].some((field) => {
-//         return field?.trim() === "";
-//       })
-//     ) {
-//       throw new APIError(400, "All fields must be filled");
-//     }
+    if (
+      [
+        clientName,
+        projectInfo,
+        status,
+        source,
+        email,
+        phoneNumber,
+        dealValue,
+      ].some((field) => {
+        return field?.trim() === "";
+      })
+    ) {
+      throw new APIError(400, "All fields must be filled");
+    }
 
-//     const findLead = await Leads.findOne({ clientName: clientName });
-//   } catch (error) {}
-// };
+    const employeeID = req.context.employeeID;
+
+    const [employee] = await Employee.aggregate([
+      {
+        $match: {
+          _id: employeeID,
+        },
+      },
+      {
+        $graphLookup: {
+          from: "employees",
+          startWith: "$_id",
+          connectFromField: "_id",
+          connectToField: "reportingTo",
+          depthField: "level",
+          as: "subordinates",
+        },
+      },
+    ]);
+
+    if (!employee) {
+      throw new APIError(404, "Employee not found");
+    }
+
+    const accessibleUsers = [
+      employeeID,
+      ...employee.subordinates.map((emp) => emp._id),
+    ];
+
+    const findLead = await Leads.findOne({
+      clientName: clientName,
+      assignedTo: { $in: accessibleUsers },
+    });
+
+    if (!findLead) {
+      throw new APIError(400, "Can't Find Lead");
+    }
+
+    findLead.clientName = clientName;
+    findLead.status = status;
+    findLead.source = source;
+    findLead.source = source;
+    findLead.email = email;
+    findLead.phoneNumber = phoneNumber;
+    findLead.dealValue = dealValue;
+
+    await findLead.save();
+
+    res
+      .status(200)
+      .json(new APIResponse(200, findLead, "Lead details updated"));
+  } catch (error) {
+    res.status(error.statusCode || 500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 
 const getLeads = async (req, res) => {
   try {
@@ -201,26 +256,24 @@ const getFunnelData = async (req, res) => {
     const leadsInProgress = totalLeads - decision;
     console.log(leadsInProgress);
 
-    res
-      .status(200)
-      .json(
-        new APIResponse(
-          200,
-          {
-            suspect,
-            prospect,
-            demo,
-            proposal,
-            negotiation,
-            decision,
-            totalLeads,
-            leadsInProgress,
-            leadsWon,
-            leadsLost,
-          },
-          "Funnel Data Fetched"
-        )
-      );
+    res.status(200).json(
+      new APIResponse(
+        200,
+        {
+          suspect,
+          prospect,
+          demo,
+          proposal,
+          negotiation,
+          decision,
+          totalLeads,
+          leadsInProgress,
+          leadsWon,
+          leadsLost,
+        },
+        "Funnel Data Fetched"
+      )
+    );
   } catch (error) {
     res.status(error.statusCode || 500).json({
       success: false,
@@ -229,4 +282,4 @@ const getFunnelData = async (req, res) => {
   }
 };
 
-export { addLead, getLeads, getFunnelData };
+export { addLead, getLeads, getFunnelData, editLead };

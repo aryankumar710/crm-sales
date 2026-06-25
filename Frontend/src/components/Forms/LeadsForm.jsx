@@ -1,49 +1,12 @@
-import { CrossButton } from "../../components/Buttons/CrossButton.component";
-import { Dropdown } from "../../components/InputFields/Dropdown.component";
-import { PlainInputField } from "../../components/InputFields/PlainInputField";
-import { Modal } from "../../components/Modals/Modal.component";
-import { projectStatus } from "../../utils/projectStatus.js";
-import { PrimaryButton } from "../../components/Buttons/PrimaryButton.component.jsx";
-import { useState } from "react";
-import { useAddLeadMutation } from "../../features/API/api.js";
-import styles from "../AddLeads/AddLeads.page.module.css";
-import { PhoneInputField } from "../../components/InputFields/PhoneInputField.jsx";
+import { CrossButton } from "../Buttons/CrossButton.component.jsx";
+import { PlainInputField } from "../InputFields/PlainInputField.jsx";
+import { Dropdown } from "../InputFields/Dropdown.component.jsx";
+import { PhoneInputField } from "../InputFields/PhoneInputField.jsx";
+import { PrimaryButton } from "../Buttons/PrimaryButton.component.jsx";
 
-export const AddLeads = ({ isOpen, onClose }) => {
-  const [addLead, { isLoading, isSuccess, error }] = useAddLeadMutation();
-
-  const [form, setForm] = useState({
-    clientName: "",
-    projectInfo: "",
-    status: "",
-    source: "",
-    email: "",
-    phoneNumber: "",
-    dealValue: "",
-  });
-
-  if (!isOpen) return null;
-
-  function onChange(e) {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  }
-
-  function handleSubmit(e) {
-    e.preventDefault();
-    const postApi = async () => {
-      try {
-        await addLead(form).unwrap();
-        onClose();
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    postApi();
-  }
-
+export const LeadsForm = ({onChange, form, onSubmit, onClose}) => {
   return (
-    <Modal isOpen={isOpen}>
+    <>
       <form
         method="post"
         className={styles.whiteBackground}
@@ -134,6 +97,6 @@ export const AddLeads = ({ isOpen, onClose }) => {
           </svg>
         </PrimaryButton>
       </form>
-    </Modal>
+    </>
   );
 };
