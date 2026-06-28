@@ -14,8 +14,8 @@ import {sendInviteEmail} from "../utils/invitationToken.js"
 //Registration of organisation, hr admin and super admin
 
 const register = async (req, res) => {
-  const session = await mongoose.startSession();
-  session.startTransaction();
+ 
+ 
   try {
     const {
       companyName,
@@ -74,15 +74,15 @@ const register = async (req, res) => {
     }
 
     const createOrganisation = await Organisation.create(
-      [
+      
         {
           companyName: companyName,
           companyLogo: logo.url,
           headOfficeName: headOfficeName,
           hrAdminEmail: superAdminEmail || hrAdminEmail,
         },
-      ],
-      { session }
+      
+    
     );
 
     console.log(createOrganisation);
@@ -100,31 +100,30 @@ const register = async (req, res) => {
 
     if (superAdminEmail?.length) {
       const createRole = await Role.create(
-        [
+        
           {
             roleName: "Super Admin",
             parentRole: null,
             roleType: "Super Admin",
-            organisationID: createOrganisation[0]._id,
+            organisationID: createOrganisation._id,
           },
-        ],
-        { session }
+        
+        
       );
 
       console.log(createRole);
 
       createsuperAdmin = await Employee.create(
-        [
+        
           {
-            organisationID: createOrganisation[0]._id,
+            organisationID: createOrganisation._id,
             employeeName: companyName,
             employeeEmail: superAdminEmail,
-            role: createRole[0]._id,
+            role: createRole._id,
             reportingPerson: null,
             invitationToken: generateInviteToken,
           },
-        ],
-        { session }
+      
       );
 
       if (!createsuperAdmin) {
@@ -140,43 +139,42 @@ const register = async (req, res) => {
       await sendInviteEmail(superAdminEmail, link);
     }
     const lastRole = await Role.find({
-      parentRole: createsuperAdmin[0]?.role,
-      organisationID: createOrganisation[0]._id,
+      parentRole: createsuperAdmin?.role,
+      organisationID: createOrganisation._id,
     })
       .sort({ order: -1 })
       .limit(1);
     console.log(lastRole);
 
     const createRole = await Role.create(
-      [
+    
         {
           roleName: "HR Admin",
-          parentRole: createsuperAdmin[0]?.role || null,
+          parentRole: createsuperAdmin?.role || null,
           roleType: "HR Admin",
-          organisationID: createOrganisation[0]._id,
-          order: lastRole.length ? lastRole[0].order + 1 : 1,
+          organisationID: createOrganisation._id,
+          order: lastRole.length ? lastRole.order + 1 : 1,
         },
-      ],
-      { session }
+    
     );
 
     console.log(createRole);
 
     const createAdmin = await Employee.create(
-      [
+      
         {
-          organisationID: createOrganisation[0]._id,
+          organisationID: createOrganisation._id,
           employeeName: adminName,
           employeeEmail: hrAdminEmail,
           countryCode: countryCode,
           phoneNumber: phoneNumber,
-          role: createRole[0]._id,
-          reportingPerson: createsuperAdmin[0]?._id || null,
+          role: createRole._id,
+          reportingPerson: createsuperAdmin?._id || null,
           password: password,
           invitationToken: null,
         },
-      ],
-      { session }
+     
+      
     );
 
     if (!createAdmin) {
@@ -187,17 +185,17 @@ const register = async (req, res) => {
     }
     console.log(createAdmin);
 
-    await session.commitTransaction();
+    
 
     const { accessToken, refreshToken } =
-      await generateAccessTokenAndRefreshToken(createAdmin[0]._id);
+      await generateAccessTokenAndRefreshToken(createAdmin._id);
 
-    const loggedInEmployee = await Employee.findById(createAdmin[0]._id).select(
+    const loggedInEmployee = await Employee.findById(createAdmin._id).select(
       "-password -refreshToken"
     );
 
     const loggedInOrganisation = await Organisation.findById(
-      createOrganisation[0]._id
+      createOrganisation._id
     );
 
    const option = {
@@ -218,7 +216,7 @@ const register = async (req, res) => {
         )
       );
   } catch (error) {
-    await session.abortTransaction();
+   
     res.status(error.statusCode || 500).json({
       success: false,
       message: error.message,
