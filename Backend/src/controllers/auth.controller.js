@@ -66,7 +66,10 @@ const register = async (req, res) => {
       throw new APIError(400, "Organisation logo is missing");
     }
 
-    const logo = await uploadOnCloudinary(organisationLogoPath, companyName);
+    // const logo = await uploadOnCloudinary(organisationLogoPath, companyName);
+    const logo = {
+  url: "https://dummy.com/logo.png"
+};
     console.log(organisationLogoPath);
 
     if (!logo.url) {
