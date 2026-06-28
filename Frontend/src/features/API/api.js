@@ -163,7 +163,8 @@ export const api = createApi({
         url: "/getFunnelData"
       }),
       providesTags: ["Leads"]
-    })
+    }),
+
   })
 });
 
@@ -188,6 +189,7 @@ export const {
   useChangePasswordMutation,
   useForgetPasswordMutation,
   useGetChangePasswordTokenQuery,
-  useGetFunnelDataQuery
+  useGetFunnelDataQuery,
+  useEditLeadsMutation
  
 } = api;

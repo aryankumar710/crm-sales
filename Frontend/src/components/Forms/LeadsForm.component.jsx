@@ -3,6 +3,8 @@ import { PlainInputField } from "../InputFields/PlainInputField.jsx";
 import { Dropdown } from "../InputFields/Dropdown.component.jsx";
 import { PhoneInputField } from "../InputFields/PhoneInputField.jsx";
 import { PrimaryButton } from "../Buttons/PrimaryButton.component.jsx";
+import styles from "../Forms/Forms.component.module.css"
+
 
 export const LeadsForm = ({onChange, form, onSubmit, onClose}) => {
   return (

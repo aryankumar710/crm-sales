@@ -45,42 +45,97 @@
 //   }
 // };
 
-import {Resend} from "resend"
+// import {Resend} from "resend"
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// const resend = new Resend(process.env.RESEND_API_KEY);
+
+// export const sendInviteEmail = async (email, link) => {
+//   try {
+//     const { data, error } = await resend.emails.send({
+//       from: 'onboarding@resend.dev',
+//       to: email,
+//       subject: "Set your password",
+//       html: `
+//         <h2>Welcome!</h2>
+//         <p>Click below to set your password:</p>
+
+//         <a href="${link}">
+//           Set Password
+//         </a>
+
+//         <br><br>
+
+//         <p>If the button doesn't work, copy this link:</p>
+
+//         <p>${link}</p>
+//       `,
+//     });
+
+//     console.log("resend")
+
+//     if (error) {
+//       console.error(error);
+//       throw new Error(error.message);
+//     }
+
+//     console.log("Email Sent:", data);
+//   } catch (error) {
+//     console.error("Resend Error:", error);
+//     throw error;
+//   }
+// };
+
+
+import SibApiV3Sdk from "sib-api-v3-sdk"
+
+const client = SibApiV3Sdk.ApiClient.instance
+
+const apiKey = client.authentications["api-key"]
+apiKey.apiKey = process.env.BREVO_API_KEY;
+
+const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 
 export const sendInviteEmail = async (email, link) => {
   try {
-    const { data, error } = await resend.emails.send({
-      from: 'onboarding@resend.dev',
-      to: email,
-      subject: "Set your password",
-      html: `
-        <h2>Welcome!</h2>
-        <p>Click below to set your password:</p>
+    const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
+    console.log(sendInviteEmail)
 
-        <a href="${link}">
-          Set Password
-        </a>
+    sendSmtpEmail.sender = {
+      email: process.env.BREVO_SENDER_EMAIL,
+      name: process.env.BREVO_SENDER_NAME,
+    };
+    
 
-        <br><br>
+    sendSmtpEmail.to = [
+      {
+        email,
+      },
+    ];
 
-        <p>If the button doesn't work, copy this link:</p>
+    sendSmtpEmail.subject = "Set your password";
 
-        <p>${link}</p>
-      `,
-    });
+    sendSmtpEmail.htmlContent = `
+      <h2>Welcome!</h2>
 
-    console.log("resend")
+      <p>Click below to set your password:</p>
 
-    if (error) {
-      console.error(error);
-      throw new Error(error.message);
-    }
+      <a href="${link}">
+        Set Password
+      </a>
 
-    console.log("Email Sent:", data);
+      <br><br>
+
+      <p>If the button doesn't work, copy this link:</p>
+
+      <p>${link}</p>
+    `;
+
+    const result = await apiInstance.sendTransacEmail(sendSmtpEmail);
+    console.log(result)
+
+    console.log("Email sent:", result);
   } catch (error) {
-    console.error("Resend Error:", error);
+    console.error("Brevo Error:", error);
     throw error;
   }
 };

@@ -227,7 +227,6 @@ const register = async (req, res) => {
 };
 
 
-
 const getInviteToken = async (req, res) => {
   try {
     const employee = req.employee;
