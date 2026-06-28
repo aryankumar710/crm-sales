@@ -94,7 +94,7 @@ const register = async (req, res) => {
       );
     }
 
-    const generateInviteToken = crypto.randomBytes(32).toString("hex");
+    const generateInviteToken = await crypto.randomBytes(32).toString("hex");
 
     let createsuperAdmin = null;
 
