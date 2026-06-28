@@ -14,8 +14,8 @@ import {sendInviteEmail} from "../utils/invitationToken.js"
 //Registration of organisation, hr admin and super admin
 
 const register = async (req, res) => {
- 
- 
+  const session = await mongoose.startSession();
+  session.startTransaction();
   try {
     const {
       companyName,
@@ -66,10 +66,7 @@ const register = async (req, res) => {
       throw new APIError(400, "Organisation logo is missing");
     }
 
-    // const logo = await uploadOnCloudinary(organisationLogoPath, companyName);
-    const logo = {
-  url: "https://dummy.com/logo.png"
-};
+    const logo = await uploadOnCloudinary(organisationLogoPath, companyName);
     console.log(organisationLogoPath);
 
     if (!logo.url) {
@@ -77,15 +74,15 @@ const register = async (req, res) => {
     }
 
     const createOrganisation = await Organisation.create(
-      
+      [
         {
           companyName: companyName,
           companyLogo: logo.url,
           headOfficeName: headOfficeName,
           hrAdminEmail: superAdminEmail || hrAdminEmail,
         },
-      
-    
+      ],
+      { session }
     );
 
     console.log(createOrganisation);
@@ -97,36 +94,37 @@ const register = async (req, res) => {
       );
     }
 
-    const generateInviteToken = await crypto.randomBytes(32).toString("hex");
+    const generateInviteToken = crypto.randomBytes(32).toString("hex");
 
     let createsuperAdmin = null;
 
     if (superAdminEmail?.length) {
       const createRole = await Role.create(
-        
+        [
           {
             roleName: "Super Admin",
             parentRole: null,
             roleType: "Super Admin",
-            organisationID: createOrganisation._id,
+            organisationID: createOrganisation[0]._id,
           },
-        
-        
+        ],
+        { session }
       );
 
       console.log(createRole);
 
       createsuperAdmin = await Employee.create(
-        
+        [
           {
-            organisationID: createOrganisation._id,
+            organisationID: createOrganisation[0]._id,
             employeeName: companyName,
             employeeEmail: superAdminEmail,
-            role: createRole._id,
+            role: createRole[0]._id,
             reportingPerson: null,
             invitationToken: generateInviteToken,
           },
-      
+        ],
+        { session }
       );
 
       if (!createsuperAdmin) {
@@ -142,42 +140,43 @@ const register = async (req, res) => {
       await sendInviteEmail(superAdminEmail, link);
     }
     const lastRole = await Role.find({
-      parentRole: createsuperAdmin?.role,
-      organisationID: createOrganisation._id,
+      parentRole: createsuperAdmin[0]?.role,
+      organisationID: createOrganisation[0]._id,
     })
       .sort({ order: -1 })
       .limit(1);
     console.log(lastRole);
 
     const createRole = await Role.create(
-    
+      [
         {
           roleName: "HR Admin",
-          parentRole: createsuperAdmin?.role || null,
+          parentRole: createsuperAdmin[0]?.role || null,
           roleType: "HR Admin",
-          organisationID: createOrganisation._id,
-          order: lastRole.length ? lastRole.order + 1 : 1,
+          organisationID: createOrganisation[0]._id,
+          order: lastRole.length ? lastRole[0].order + 1 : 1,
         },
-    
+      ],
+      { session }
     );
 
     console.log(createRole);
 
     const createAdmin = await Employee.create(
-      
+      [
         {
-          organisationID: createOrganisation._id,
+          organisationID: createOrganisation[0]._id,
           employeeName: adminName,
           employeeEmail: hrAdminEmail,
           countryCode: countryCode,
           phoneNumber: phoneNumber,
-          role: createRole._id,
-          reportingPerson: createsuperAdmin?._id || null,
+          role: createRole[0]._id,
+          reportingPerson: createsuperAdmin[0]?._id || null,
           password: password,
           invitationToken: null,
         },
-     
-      
+      ],
+      { session }
     );
 
     if (!createAdmin) {
@@ -188,17 +187,17 @@ const register = async (req, res) => {
     }
     console.log(createAdmin);
 
-    
+    await session.commitTransaction();
 
     const { accessToken, refreshToken } =
-      await generateAccessTokenAndRefreshToken(createAdmin._id);
+      await generateAccessTokenAndRefreshToken(createAdmin[0]._id);
 
-    const loggedInEmployee = await Employee.findById(createAdmin._id).select(
+    const loggedInEmployee = await Employee.findById(createAdmin[0]._id).select(
       "-password -refreshToken"
     );
 
     const loggedInOrganisation = await Organisation.findById(
-      createOrganisation._id
+      createOrganisation[0]._id
     );
 
    const option = {
@@ -219,7 +218,13 @@ const register = async (req, res) => {
         )
       );
   } catch (error) {
-   
+     console.error("========== REGISTER ERROR ==========");
+  console.error(error);
+  console.error(error.stack);
+    await session.abortTransaction();
+     console.error("========== REGISTER ERROR ==========");
+  console.error(error);
+  console.error(error.stack);
     res.status(error.statusCode || 500).json({
       success: false,
       message: error.message,

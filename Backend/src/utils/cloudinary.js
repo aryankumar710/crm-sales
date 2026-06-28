@@ -18,11 +18,11 @@ const uploadOnCloudinary = async (localfilePath, folder) => {
       folder: folder,
     });
     console.log("file is uploaded", response.url);
-   // fs.unlinkSync(localfilePath);
+    fs.unlinkSync(localfilePath);
 
     return response;
   } catch (error) {
-   // fs.unlinkSync(localfilePath);
+    fs.unlinkSync(localfilePath);
     console.log(`Problem at uploading data at ${folder}`, error);
   }
 };
