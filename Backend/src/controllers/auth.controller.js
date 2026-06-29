@@ -14,6 +14,7 @@ import {sendInviteEmail} from "../utils/invitationToken.js"
 //Registration of organisation, hr admin and super admin
 
 const register = async (req, res) => {
+  throw new Error("REGISTER CONTROLLER REACHED");
   const session = await mongoose.startSession();
   session.startTransaction();
   try {
