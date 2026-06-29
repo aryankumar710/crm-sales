@@ -17,10 +17,26 @@ import { inviteTokenValidate } from "../middlewares/inviteTokenValidate.js";
 
 const authRouter = Router();
 
+// authRouter.route("/register").post(
+//   upload.single("logo"),
+
+//   register
+// );
+
 authRouter.route("/register").post(
   upload.single("logo"),
+  (req, res) => {
+    console.log("========== MULTER TEST ==========");
+    console.log("Body:", req.body);
+    console.log("File:", req.file);
 
-  register
+    return res.status(200).json({
+      success: true,
+      message: "Multer is working",
+      body: req.body,
+      file: req.file,
+    });
+  }
 );
 
 authRouter.route("/getInviteDetails").get(inviteTokenValidate, getInviteToken);

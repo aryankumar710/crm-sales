@@ -50,7 +50,7 @@ export const Registration = () => {
     const data = new FormData();
 
     data.append("companyName", form.companyName);
-    data.append("logo", form.companyLogo); //
+    data.append("logo", form.companyLogo); 
     data.append("headOfficeName", form.headOfficeName);
     data.append("superAdminEmail", form.superAdminEmail);
     data.append("adminName", form.adminName);
