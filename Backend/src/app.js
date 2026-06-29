@@ -37,18 +37,13 @@ import { leadsRouter } from "./routes/leads.route.js";
 app.use("/api/v1", leadsRouter)
 
 app.use((err, req, res, next) => {
-  if (err instanceof APIError) {
-    return res.status(err.statusCode).json({
-      success: err.success,
-      message: err.message,
-      errors: err.errors,
-      data: err.data,
-    });
-  }
+  console.error("============= GLOBAL ERROR =============");
+  console.error(err);
+  console.error(err.stack);
 
-  res.status(500).json({
+  return res.status(500).json({
     success: false,
-    message: "Internal Server Error",
+    message: err.message,
   });
 });
 
