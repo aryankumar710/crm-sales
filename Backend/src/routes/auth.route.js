@@ -25,7 +25,7 @@ authRouter.route("/register").post(
 
 authRouter.route("/getInviteDetails").get(inviteTokenValidate, getInviteToken);
 
-authRouter.route("/setPassword").patch( registerSuperAdmin);
+authRouter.route("/setPassword").patch(registerSuperAdmin);
 
 authRouter.route("/login").post(loginEmployee);
 
@@ -33,12 +33,14 @@ authRouter.route("/refresh-token").post(refreshAccessToken);
 
 authRouter.route("/logout").post(verifyJWT, logout);
 
-authRouter.route("/getMe").get(verifyJWT, getMe)
+authRouter.route("/getMe").get(verifyJWT, getMe);
 
-authRouter.route("/forgetPassword").post(forgetPassword)
+authRouter.route("/forgetPassword").post(forgetPassword);
 
-authRouter.route("/changePasswordToken").get(inviteTokenValidate,getChangePasswordToken)
+authRouter
+  .route("/changePasswordToken")
+  .get(inviteTokenValidate, getChangePasswordToken);
 
-authRouter.route("/changePassword").post(changePassword)
+authRouter.route("/changePassword").post(changePassword);
 
 export { authRouter };

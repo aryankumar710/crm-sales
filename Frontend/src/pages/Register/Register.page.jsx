@@ -62,6 +62,7 @@ export const Registration = () => {
 
     try {
       const res = await register(data).unwrap();
+      console.log(res)
 
       dispatch(setEmployee(res.data));
 
